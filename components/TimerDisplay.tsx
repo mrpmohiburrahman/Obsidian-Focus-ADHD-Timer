@@ -1,4 +1,3 @@
-
 // components/TimerDisplay.tsx
 
 import React from "react";
@@ -25,18 +24,17 @@ const TimerDisplay: React.FC<TimerDisplayProps> = ({
       <Progress.Circle
         size={200}
         progress={progress}
-        showsText={false}
+        showsText={true}
         thickness={10}
         color={color} // Dynamic color based on lapCount
         unfilledColor={unfilledColor} // Set to previous fill color
         borderWidth={0}
         animated={isAnimated}
         strokeCap="round"
-      >
-        <Text style={styles.timerText}>
-          {formatTime(Math.floor(elapsedTime))}
-        </Text>
-      </Progress.Circle>
+        formatText={() => {
+          return formatTime(Math.floor(elapsedTime));
+        }}
+      ></Progress.Circle>
     </View>
   );
 };
