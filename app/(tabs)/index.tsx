@@ -1,43 +1,48 @@
+// Index.tsx
+
 import React, { useState, useEffect, useRef } from "react";
 import {
   View,
   Text,
-  Button,
   TextInput,
   StyleSheet,
   TouchableOpacity,
   KeyboardAvoidingView,
   Platform,
+  Alert,
 } from "react-native";
+import ProgressCircle from "react-native-progress/Circle";
 
-// Define the type for the props (if any). Since there are no props, we can omit it or define it as an empty object.
 type IndexProps = {};
 
 const Index: React.FC<IndexProps> = () => {
-  const [fixedTime, setFixedTime] = useState<number>(300); // Default 5 minutes in seconds
+  // State variables
+  const [fixedTime, setFixedTime] = useState<number>(5); // Default 5 seconds for demonstration
   const [elapsedTime, setElapsedTime] = useState<number>(0);
   const [isRunning, setIsRunning] = useState<boolean>(false);
-  const [inputValue, setInputValue] = useState<string>("300"); // To manage TextInput value
+  const [inputValue, setInputValue] = useState<string>("5"); // To manage TextInput value
+  const [lapCount, setLapCount] = useState<number>(0);
 
-  // Ref to store the interval ID
+  // Predefined color palette
+  const colors: string[] = [
+    "#BB86FC", // Purple
+    "#03DAC6", // Teal
+    "#CF6679", // Pink
+    "#FF9800", // Orange
+    "#8BC34A", // Light Green
+  ];
+
+  // Calculate current and previous colors
+  const currentColor: string = colors[lapCount % colors.length];
+  const previousColor: string =
+    lapCount === 0
+      ? "#1E1E1E" // Initial unfilled color
+      : colors[(lapCount - 1) % colors.length];
+
+  // Refs to store interval ID and timing information
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
-
-  // Effect to handle the timer
-  useEffect(() => {
-    if (isRunning) {
-      intervalRef.current = setInterval(() => {
-        setElapsedTime((prevTime) => prevTime + 1);
-      }, 1000);
-    }
-
-    // Cleanup the interval on pause or unmount
-    return () => {
-      if (intervalRef.current) {
-        clearInterval(intervalRef.current);
-        intervalRef.current = null;
-      }
-    };
-  }, [isRunning]);
+  const startTimeRef = useRef<number | null>(null);
+  const previousElapsedRef = useRef<number>(0);
 
   // Function to format time in MM:SS
   const formatTime = (timeInSeconds: number): string => {
@@ -50,32 +55,78 @@ const Index: React.FC<IndexProps> = () => {
     return `${formattedMinutes}:${formattedSeconds}`;
   };
 
-  // Handlers for start, pause, and reset
+  // Start the timer
   const handleStart = (): void => {
     if (!isRunning) {
       setIsRunning(true);
+      startTimeRef.current = Date.now();
     }
   };
 
+  // Pause the timer
   const handlePause = (): void => {
     if (isRunning) {
       setIsRunning(false);
+      if (startTimeRef.current) {
+        const delta = (Date.now() - startTimeRef.current) / 1000;
+        previousElapsedRef.current += delta;
+      }
     }
   };
 
+  // Reset the timer
   const handleReset = (): void => {
     setIsRunning(false);
     setElapsedTime(0);
+    previousElapsedRef.current = 0;
+    setLapCount(0);
   };
 
-  // Handler to set fixed time from user input
+  // Set fixed time from user input
   const handleSetFixedTime = (input: string): void => {
     const parsedTime: number = parseInt(input, 10);
     if (!isNaN(parsedTime) && parsedTime > 0) {
       setFixedTime(parsedTime);
-      setElapsedTime(0); // Reset elapsed time when fixed time is set
+      setElapsedTime(0);
+      previousElapsedRef.current = 0;
+      setLapCount(0);
+    } else {
+      Alert.alert("Invalid Input", "Please enter a positive number.");
     }
   };
+
+  // Effect to handle the timer updates
+  useEffect(() => {
+    if (isRunning) {
+      intervalRef.current = setInterval(() => {
+        if (startTimeRef.current) {
+          const delta = (Date.now() - startTimeRef.current) / 1000;
+          const totalElapsed = previousElapsedRef.current + delta;
+
+          setElapsedTime(totalElapsed);
+
+          // Calculate the number of completed laps
+          const newLapCount = Math.floor(totalElapsed / fixedTime);
+
+          // Update lap count only if a new lap has been completed
+          if (newLapCount > lapCount) {
+            setLapCount(newLapCount);
+          }
+        }
+      }, 100); // Update every 100ms for smoothness
+    }
+
+    // Cleanup on pause or unmount
+    return () => {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+        intervalRef.current = null;
+      }
+    };
+  }, [isRunning, fixedTime, lapCount]);
+
+  // Calculate progress for the current interval
+  const progress = (elapsedTime % fixedTime) / fixedTime;
 
   return (
     <KeyboardAvoidingView
@@ -94,12 +145,29 @@ const Index: React.FC<IndexProps> = () => {
             setInputValue(text);
             handleSetFixedTime(text);
           }}
-          placeholder="300 for 5 minutes"
+          placeholder="5 for 5 seconds"
           placeholderTextColor="#888"
         />
       </View>
 
-      <Text style={styles.timerText}>{formatTime(elapsedTime)}</Text>
+      <View style={styles.progressContainer}>
+        <ProgressCircle
+          size={200}
+          progress={progress}
+          // indeterminate
+          // indeterminateAnimationDuration={8000}
+          showsText={false}
+          thickness={10}
+          color={currentColor} // Dynamic color based on lapCount
+          unfilledColor={previousColor} // Set to previous fill color
+          borderWidth={0}
+          animated={true}
+        >
+          <Text style={styles.timerText}>
+            {formatTime(Math.floor(elapsedTime))}
+          </Text>
+        </ProgressCircle>
+      </View>
 
       <View style={styles.buttonContainer}>
         {!isRunning ? (
@@ -118,9 +186,7 @@ const Index: React.FC<IndexProps> = () => {
 
       <Text style={styles.infoText}>Fixed Time: {formatTime(fixedTime)}</Text>
 
-      {elapsedTime >= fixedTime && (
-        <Text style={styles.infoText}>Timer has exceeded the fixed time.</Text>
-      )}
+      <Text style={styles.infoText}>Completed Intervals: {lapCount}</Text>
     </KeyboardAvoidingView>
   );
 };
@@ -155,10 +221,12 @@ const styles = StyleSheet.create({
     color: "#FFFFFF",
     backgroundColor: "#1E1E1E",
   },
-  timerText: {
-    fontSize: 48,
-    textAlign: "center",
+  progressContainer: {
+    alignItems: "center",
     marginVertical: 40,
+  },
+  timerText: {
+    fontSize: 32,
     color: "#FFFFFF",
     fontFamily: "Courier", // Monospace font for timer
   },
@@ -168,7 +236,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   button: {
-    backgroundColor: "#BB86FC", // A vibrant color for buttons
+    backgroundColor: "#BB86FC", // Base color for buttons
     paddingVertical: 15,
     paddingHorizontal: 30,
     borderRadius: 8,
