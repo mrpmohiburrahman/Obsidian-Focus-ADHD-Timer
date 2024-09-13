@@ -22,6 +22,8 @@ const Index: React.FC<IndexProps> = () => {
   const [isRunning, setIsRunning] = useState<boolean>(false);
   const [inputValue, setInputValue] = useState<string>("5"); // To manage TextInput value
   const [lapCount, setLapCount] = useState<number>(0);
+  const [laps, setLaps] = useState<number[]>([]); // Lap history
+  const [isAnimated, setIsAnimated] = useState<boolean>(true); // Controls the animated prop
 
   // Predefined color palette
   const colors: string[] = [
@@ -35,9 +37,7 @@ const Index: React.FC<IndexProps> = () => {
   // Calculate current and previous colors
   const currentColor: string = colors[lapCount % colors.length];
   const previousColor: string =
-    lapCount === 0
-      ? "#1E1E1E" // Initial unfilled color
-      : colors[(lapCount - 1) % colors.length];
+    lapCount === 0 ? "#1E1E1E" : colors[(lapCount - 1) % colors.length];
 
   // Refs to store interval ID and timing information
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
@@ -80,18 +80,46 @@ const Index: React.FC<IndexProps> = () => {
     setElapsedTime(0);
     previousElapsedRef.current = 0;
     setLapCount(0);
+    setLaps([]);
+    setIsAnimated(true); // Ensure animation is enabled after reset
   };
 
   // Set fixed time from user input
   const handleSetFixedTime = (input: string): void => {
-    const parsedTime: number = parseInt(input, 10);
-    if (!isNaN(parsedTime) && parsedTime > 0) {
-      setFixedTime(parsedTime);
+    const timeParts = input.split(":").map((part) => parseInt(part, 10));
+    let totalSeconds = 0;
+
+    if (timeParts.length === 2) {
+      const [minutes, seconds] = timeParts;
+      if (
+        !isNaN(minutes) &&
+        !isNaN(seconds) &&
+        seconds < 60 &&
+        minutes >= 0 &&
+        seconds >= 0
+      ) {
+        totalSeconds = minutes * 60 + seconds;
+      }
+    } else if (timeParts.length === 1) {
+      const [seconds] = timeParts;
+      if (!isNaN(seconds) && seconds > 0) {
+        totalSeconds = seconds;
+      }
+    }
+
+    if (totalSeconds > 0) {
+      setFixedTime(totalSeconds);
       setElapsedTime(0);
       previousElapsedRef.current = 0;
       setLapCount(0);
+      setLaps([]);
+      setIsAnimated(true); // Ensure animation is enabled after setting new time
     } else {
-      Alert.alert("Invalid Input", "Please enter a positive number.");
+      // Handle invalid input, e.g., show an alert or error message
+      Alert.alert(
+        "Invalid Input",
+        "Please enter a valid time in MM:SS or SS format."
+      );
     }
   };
 
@@ -111,6 +139,19 @@ const Index: React.FC<IndexProps> = () => {
           // Update lap count only if a new lap has been completed
           if (newLapCount > lapCount) {
             setLapCount(newLapCount);
+            setLaps((prevLaps) => [...prevLaps, Math.floor(totalElapsed)]);
+
+            // Control animation: disable, reset progress, then enable
+            setIsAnimated(false); // Disable animation to reset progress instantly
+            setElapsedTime(newLapCount * fixedTime); // Reset elapsedTime to exact lap multiple
+
+            // Re-enable animation after a brief delay
+            setTimeout(() => {
+              setIsAnimated(true);
+              // Restart the timer reference to continue from the exact lap time
+              previousElapsedRef.current = newLapCount * fixedTime;
+              startTimeRef.current = Date.now();
+            }, 50); // 50ms delay ensures the reset happens before animation resumes
           }
         }
       }, 100); // Update every 100ms for smoothness
@@ -136,7 +177,7 @@ const Index: React.FC<IndexProps> = () => {
       <Text style={styles.title}>Timer App</Text>
 
       <View style={styles.inputContainer}>
-        <Text style={styles.label}>Set Fixed Time (seconds):</Text>
+        <Text style={styles.label}>Set Fixed Time (MM:SS or SS):</Text>
         <TextInput
           style={styles.input}
           keyboardType="numeric"
@@ -145,7 +186,7 @@ const Index: React.FC<IndexProps> = () => {
             setInputValue(text);
             handleSetFixedTime(text);
           }}
-          placeholder="5 for 5 seconds"
+          placeholder="MM:SS or SS"
           placeholderTextColor="#888"
         />
       </View>
@@ -154,14 +195,13 @@ const Index: React.FC<IndexProps> = () => {
         <Progress.Circle
           size={200}
           progress={progress}
-          // indeterminate
-          // indeterminateAnimationDuration={8000}
           showsText={false}
           thickness={10}
           color={currentColor} // Dynamic color based on lapCount
           unfilledColor={previousColor} // Set to previous fill color
           borderWidth={0}
-          animated={true}
+          animated={isAnimated}
+          strokeCap="round"
         >
           <Text style={styles.timerText}>
             {formatTime(Math.floor(elapsedTime))}
@@ -171,15 +211,30 @@ const Index: React.FC<IndexProps> = () => {
 
       <View style={styles.buttonContainer}>
         {!isRunning ? (
-          <TouchableOpacity style={styles.button} onPress={handleStart}>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={handleStart}
+            accessibilityLabel="Start Timer"
+            accessibilityRole="button"
+          >
             <Text style={styles.buttonText}>Start</Text>
           </TouchableOpacity>
         ) : (
-          <TouchableOpacity style={styles.button} onPress={handlePause}>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={handlePause}
+            accessibilityLabel="Pause Timer"
+            accessibilityRole="button"
+          >
             <Text style={styles.buttonText}>Pause</Text>
           </TouchableOpacity>
         )}
-        <TouchableOpacity style={styles.button} onPress={handleReset}>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={handleReset}
+          accessibilityLabel="Reset Timer"
+          accessibilityRole="button"
+        >
           <Text style={styles.buttonText}>Reset</Text>
         </TouchableOpacity>
       </View>
@@ -187,6 +242,18 @@ const Index: React.FC<IndexProps> = () => {
       <Text style={styles.infoText}>Fixed Time: {formatTime(fixedTime)}</Text>
 
       <Text style={styles.infoText}>Completed Intervals: {lapCount}</Text>
+
+      {/* Lap History */}
+      {/* {laps.length > 0 && (
+        <View style={styles.lapContainer}>
+          <Text style={styles.lapTitle}>Lap History:</Text>
+          {laps.map((lapTime, index) => (
+            <Text key={index} style={styles.lapText}>
+              Lap {index + 1}: {formatTime(lapTime)}
+            </Text>
+          ))}
+        </View>
+      )} */}
     </KeyboardAvoidingView>
   );
 };
@@ -256,6 +323,23 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: "#BBBBBB",
     marginTop: 10,
+  },
+  lapContainer: {
+    marginTop: 20,
+    padding: 10,
+    backgroundColor: "#1E1E1E",
+    borderRadius: 5,
+  },
+  lapTitle: {
+    color: "#FFFFFF",
+    fontSize: 16,
+    fontWeight: "bold",
+    marginBottom: 5,
+  },
+  lapText: {
+    color: "#BBBBBB",
+    fontSize: 14,
+    marginBottom: 2,
   },
 });
 
