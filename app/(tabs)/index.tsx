@@ -11,7 +11,7 @@ import {
   Platform,
   Alert,
 } from "react-native";
-import ProgressCircle from "react-native-progress/Circle";
+import * as Progress from "react-native-progress";
 
 type IndexProps = {};
 
@@ -151,7 +151,7 @@ const Index: React.FC<IndexProps> = () => {
       </View>
 
       <View style={styles.progressContainer}>
-        <ProgressCircle
+        <Progress.Circle
           size={200}
           progress={progress}
           // indeterminate
@@ -166,7 +166,7 @@ const Index: React.FC<IndexProps> = () => {
           <Text style={styles.timerText}>
             {formatTime(Math.floor(elapsedTime))}
           </Text>
-        </ProgressCircle>
+        </Progress.Circle>
       </View>
 
       <View style={styles.buttonContainer}>
