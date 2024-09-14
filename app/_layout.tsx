@@ -49,7 +49,7 @@ export default function RootLayout() {
                 name="(drawer)/index" // Ensure this matches your screen's file name
                 options={{
                   drawerLabel: "Timer",
-                  title: "Timer Title",
+                  title: "",
                 }}
               />
               <Drawer.Screen

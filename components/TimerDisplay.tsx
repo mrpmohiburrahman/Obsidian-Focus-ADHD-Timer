@@ -4,6 +4,7 @@ import { formatTime } from "@/utils/formatTime";
 import React from "react";
 import { View } from "react-native";
 import * as Progress from "react-native-progress";
+import { moderateScale } from "react-native-size-matters";
 
 type TimerDisplayProps = {
   progress: number;
@@ -21,9 +22,16 @@ const TimerDisplay: React.FC<TimerDisplayProps> = ({
   isAnimated,
 }) => {
   return (
-    <View style={{ alignItems: "center", marginVertical: 40 }}>
+    <View
+      style={{
+        alignItems: "center",
+        marginVertical: 40,
+        borderWidth: 1,
+        borderColor: "white",
+      }}
+    >
       <Progress.Circle
-        size={200}
+        size={moderateScale(250)}
         progress={progress}
         showsText={true}
         thickness={10}
@@ -39,7 +47,5 @@ const TimerDisplay: React.FC<TimerDisplayProps> = ({
     </View>
   );
 };
-
-// Utility function imported
 
 export default TimerDisplay;

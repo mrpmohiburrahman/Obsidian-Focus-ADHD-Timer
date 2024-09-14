@@ -1,12 +1,14 @@
-
 // utils/formatTime.ts
 
 export const formatTime = (timeInSeconds: number): string => {
-  const minutes: number = Math.floor(timeInSeconds / 60);
-  const seconds: number = Math.floor(timeInSeconds % 60);
-  const formattedMinutes: string =
-    minutes < 10 ? `0${minutes}` : `${minutes}`;
-  const formattedSeconds: string =
-    seconds < 10 ? `0${seconds}` : `${seconds}`;
-  return `${formattedMinutes}:${formattedSeconds}`;
+  const hours = Math.floor(timeInSeconds / 3600);
+  const minutes = Math.floor((timeInSeconds % 3600) / 60);
+  const seconds = timeInSeconds % 60;
+
+  const hoursStr = hours > 0 ? `${hours}:` : "";
+  const minutesStr =
+    hours > 0 ? String(minutes).padStart(2, "0") : String(minutes);
+  const secondsStr = String(seconds).padStart(2, "0");
+
+  return `${hoursStr}${minutesStr}:${secondsStr}`;
 };
