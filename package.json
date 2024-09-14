@@ -10,7 +10,7 @@
     "web": "expo start --web",
     "test": "jest --watchAll",
     "lint": "expo lint",
-    "postinstall": "npx pod-install ios"
+    "postinstall": "npx pod-install iosw"
   },
   "jest": {
     "preset": "jest-expo"
