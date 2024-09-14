@@ -1,7 +1,8 @@
 // components/TimerDisplay.tsx
 
+import { formatTime } from "@/utils/formatTime";
 import React from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { View } from "react-native";
 import * as Progress from "react-native-progress";
 
 type TimerDisplayProps = {
@@ -20,7 +21,7 @@ const TimerDisplay: React.FC<TimerDisplayProps> = ({
   isAnimated,
 }) => {
   return (
-    <View style={styles.container}>
+    <View style={{ alignItems: "center", marginVertical: 40 }}>
       <Progress.Circle
         size={200}
         progress={progress}
@@ -34,24 +35,11 @@ const TimerDisplay: React.FC<TimerDisplayProps> = ({
         formatText={() => {
           return formatTime(Math.floor(elapsedTime));
         }}
-      ></Progress.Circle>
+      />
     </View>
   );
 };
 
 // Utility function imported
-import { formatTime } from "../utils/formatTime";
-
-const styles = StyleSheet.create({
-  container: {
-    alignItems: "center",
-    marginVertical: 40,
-  },
-  timerText: {
-    fontSize: 32,
-    color: "#FFFFFF",
-    fontFamily: "Courier", // Monospace font for timer
-  },
-});
 
 export default TimerDisplay;
