@@ -177,23 +177,141 @@ const xpSlice = createSlice({
       const newRank = determineRank(state.xp);
       state.rank = newRank;
     },
+
+    // New reducer to add a session with a specific date
+    addSessionWithDate: (
+      state,
+      action: PayloadAction<{ sessionLength: number; date: string }>
+    ) => {
+      const { sessionLength, date } = action.payload; // date in YYYY-MM-DD format
+      const sessionMinutes = sessionLength / 60;
+
+      // Base XP per minute
+      const baseXp = Math.floor(sessionMinutes * 1); // 1 XP per minute
+
+      // Session Completion Bonus
+      const completionBonus = 5;
+
+      // Streak Bonus
+      let streakBonus = 0;
+      state.consecutiveSessions += 1;
+      if (state.consecutiveSessions === 2) {
+        streakBonus = 2;
+      } else if (state.consecutiveSessions === 3) {
+        streakBonus = 4;
+      } else if (state.consecutiveSessions >= 4) {
+        streakBonus = 6;
+      }
+
+      // Update total focused time
+      state.totalFocusedTime += sessionLength;
+
+      // Milestone Bonuses for total focused time
+      let milestoneBonus = 0;
+      const totalFocusedHours = state.totalFocusedTime / 3600; // Convert seconds to hours
+      const milestones = [1, 5, 10, 25, 50, 100];
+      const milestoneXPs = [20, 50, 100, 250, 500, 1000];
+      milestones.forEach((milestone, index) => {
+        if (
+          totalFocusedHours - sessionLength / 3600 < milestone &&
+          totalFocusedHours >= milestone
+        ) {
+          milestoneBonus += milestoneXPs[index];
+        }
+      });
+
+      // Session Milestones
+      let sessionMilestoneBonus = 0;
+      const sessionMilestones = [10, 50, 100, 250, 500, 1000];
+      const sessionMilestoneXPs = [20, 50, 100, 250, 500, 1000];
+      sessionMilestones.forEach((milestone, index) => {
+        if (
+          state.sessionCount < milestone &&
+          state.sessionCount + 1 >= milestone
+        ) {
+          sessionMilestoneBonus += sessionMilestoneXPs[index];
+        }
+      });
+
+      // Daily Use Bonus
+      let dailyBonus = 0;
+      let consecutiveDayBonus = 0;
+
+      if (state.lastSessionDate !== date) {
+        // First session on this date
+        dailyBonus = 5;
+
+        // Check for consecutive days
+        if (
+          state.lastSessionDate &&
+          moment(date).diff(moment(state.lastSessionDate), "days") === 1
+        ) {
+          state.consecutiveDays += 1;
+        } else {
+          state.consecutiveDays = 1;
+        }
+
+        // Consecutive Day Streak Bonus
+        if (state.consecutiveDays === 2) {
+          consecutiveDayBonus = 5;
+        } else if (state.consecutiveDays === 3) {
+          consecutiveDayBonus = 10;
+        } else if (state.consecutiveDays === 4) {
+          consecutiveDayBonus = 15;
+        } else if (state.consecutiveDays >= 5) {
+          consecutiveDayBonus = 20;
+        }
+      }
+
+      state.lastSessionDate = date;
+
+      // Total XP calculation
+      const totalXpGained =
+        baseXp +
+        completionBonus +
+        streakBonus +
+        milestoneBonus +
+        sessionMilestoneBonus +
+        dailyBonus +
+        consecutiveDayBonus;
+
+      state.xp += totalXpGained;
+      state.sessionCount += 1;
+
+      // Add the session to the sessions array
+      const newSession: Session = {
+        id: Date.now().toString(), // Simple unique ID based on timestamp
+        date: date,
+        duration: sessionLength,
+      };
+      state.sessions.push(newSession);
+
+      // Update Rank
+      const newRank = determineRank(state.xp);
+      state.rank = newRank;
+    },
+
     resetConsecutiveSessions: (state) => {
       state.consecutiveSessions = 0;
     },
     resetConsecutiveDays: (state) => {
       state.consecutiveDays = 0;
     },
+    // Add the resetState reducer
     resetXpState: () => initialState,
   },
 });
 
+// Export actions
 export const {
   addSession,
+  addSessionWithDate, // Export the new action
   resetConsecutiveSessions,
   resetConsecutiveDays,
   resetXpState,
 } = xpSlice.actions;
 
+// Export reducer
 export default xpSlice.reducer;
 
 // Selectors
@@ -202,18 +320,19 @@ export default xpSlice.reducer;
 export const selectAllSessions = (state: { xp: XpState }) => state.xp.sessions;
 
 // Selector to get sessions for a specific date
-export const selectSessionsByDate = (date: string) => (state: { xp: XpState }) =>
-  state.xp.sessions.filter(session => session.date === date);
+export const selectSessionsByDate =
+  (date: string) => (state: { xp: XpState }) =>
+    state.xp.sessions.filter((session) => session.date === date);
 
 // Selector to get sessions for the last 7 days
 export const selectLast7DaysSessions = (state: { xp: XpState }) => {
   const last7Days: string[] = [];
   for (let i = 6; i >= 0; i--) {
-    last7Days.push(moment().subtract(i, 'days').format('YYYY-MM-DD'));
+    last7Days.push(moment().subtract(i, "days").format("YYYY-MM-DD"));
   }
 
-  return last7Days.map(date => ({
+  return last7Days.map((date) => ({
     date,
-    sessions: state.xp.sessions.filter(session => session.date === date),
+    sessions: state.xp.sessions.filter((session) => session.date === date),
   }));
 };
