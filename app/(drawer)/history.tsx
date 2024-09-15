@@ -1,5 +1,6 @@
 // screens/HistoryScreen.tsx
 
+import { LavaLamp } from "@/components/LavaLamp";
 import { Colors } from "@/constants/Colors";
 import { RootState } from "@/redux/store";
 import { Ionicons } from "@expo/vector-icons"; // For navigation icons
@@ -11,7 +12,7 @@ import {
   StyleSheet,
   Text,
   TouchableOpacity,
-  View
+  View,
 } from "react-native";
 import { LineChart } from "react-native-chart-kit";
 import { Card, Title } from "react-native-paper";
@@ -238,16 +239,20 @@ const HistoryScreen: React.FC = () => {
   );
 
   return (
-    <FlatList
-      data={listData}
-      keyExtractor={(item) => item.date}
-      renderItem={renderItem}
-      ListHeaderComponent={renderHeader}
-      ListFooterComponent={renderFooter}
-      ListEmptyComponent={renderEmptyComponent}
-      contentContainerStyle={styles.contentContainer}
-      showsVerticalScrollIndicator={false}
-    />
+    <>
+      {/* <LavaLamp count={4} hue="black" intensity={100} duration={20000} /> */}
+
+      <FlatList
+        data={listData}
+        keyExtractor={(item) => item.date}
+        renderItem={renderItem}
+        ListHeaderComponent={renderHeader}
+        ListFooterComponent={renderFooter}
+        ListEmptyComponent={renderEmptyComponent}
+        contentContainerStyle={styles.contentContainer}
+        showsVerticalScrollIndicator={false}
+      />
+    </>
   );
 };
 
