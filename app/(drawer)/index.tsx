@@ -132,11 +132,11 @@ const Index: React.FC<IndexProps> = () => {
       {/* Gradient Shadows */}
       {/* Top Shadow */}
       <LinearGradient
-        colors={["rgba(0,0,0,0.3)", "transparent"]}
+        colors={["transparent", "rgba(0,0,0,0.3)"]}
         style={styles.topShadow}
         pointerEvents="none"
-        start={{ x: 0.5, y: 0 }}
-        end={{ x: 0.5, y: 1 }}
+        start={{ x: 0.5, y: 1 }}
+        end={{ x: 0.5, y: 0 }}
       />
 
       {/* Bottom Shadow */}
@@ -214,8 +214,7 @@ const styles = StyleSheet.create({
     top: 0,
     left: 0,
     right: 0,
-    height: 50,
-    // No need for backgroundColor or shadow properties as LinearGradient handles it
+    height: 200, // Increased height from 50 to 100
     zIndex: 1, // Ensure shadow is above other components
   },
   bottomShadow: {
