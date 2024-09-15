@@ -3,12 +3,19 @@
 import TimerControls from "@/components/TimerControls";
 import TimerDisplay from "@/components/TimerDisplay";
 import TimerInput from "@/components/TimerInput";
+import { Colors } from "@/constants/Colors";
 import { useTimer } from "@/hooks/useTimer";
 import React from "react";
 import { SafeAreaView, StyleSheet, Text, View } from "react-native";
 import { moderateScale } from "react-native-size-matters";
 
 type IndexProps = {};
+
+// Define color palette inside the main component for consistent access
+const colors: string[] = Colors.colorArray;
+
+// Adjusted unfilled color for the first session
+const firstUnfilledColor = Colors.firstUnfilledColor; // Slightly lighter than the background
 
 const Index: React.FC<IndexProps> = () => {
   const {
@@ -24,20 +31,12 @@ const Index: React.FC<IndexProps> = () => {
     isAnimated,
   } = useTimer();
 
-  // Define color palette inside the main component for consistent access
-  // Index.tsx
-
-  const colors: string[] = [
-    "#BB86FC", // Purple
-    "#FF9800", // Orange
-    "#03DAC6", // Teal
-    "#FFC107", // Amber
-    "#8BC34A", // Light Green
-  ];
   // Calculate current and previous colors
   const currentColor: string = colors[lapCount % colors.length];
   const previousColor: string =
-    lapCount === 0 ? "#1E1E1E" : colors[(lapCount - 1) % colors.length];
+    lapCount === 0
+      ? firstUnfilledColor
+      : colors[(lapCount - 1) % colors.length];
 
   // Calculate progress for the current interval
   const progress = fixedTime === 0 ? 0 : (elapsedTime % fixedTime) / fixedTime;
@@ -60,19 +59,6 @@ const Index: React.FC<IndexProps> = () => {
         />
 
         <TimerInput fixedTime={fixedTime} setFixedTime={setFixedTime} />
-
-        {/* Additional Information and Lap History */}
-        {/* <View style={styles.extraInfo}>
-          <Text style={styles.infoText}>
-            Fixed Time: {formatTime(fixedTime)}
-          </Text>
-
-          <Text style={styles.infoText}>Completed Intervals: {lapCount}</Text>
-
-          {laps.length > 0 && (
-            <LapHistory laps={laps} formatTime={formatTime} />
-          )}
-        </View> */}
       </View>
 
       {/* Footer */}
@@ -91,7 +77,7 @@ const Index: React.FC<IndexProps> = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#121212", // Dark background
+    backgroundColor: Colors.background, // Dark background
     padding: moderateScale(20),
     justifyContent: "space-between",
   },
@@ -108,16 +94,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-  },
-  extraInfo: {
-    marginTop: moderateScale(20),
-    alignItems: "center",
-  },
-  infoText: {
-    textAlign: "center",
-    fontSize: moderateScale(16),
-    color: "#BBBBBB",
-    marginTop: moderateScale(10),
   },
   footer: {
     marginBottom: moderateScale(80),

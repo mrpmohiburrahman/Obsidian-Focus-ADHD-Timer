@@ -17,6 +17,7 @@ import {
 } from "@react-navigation/native";
 
 import { store, persistor } from "../redux/store";
+import { Colors } from "@/constants/Colors";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -40,35 +41,49 @@ export default function RootLayout() {
   return (
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
-        <ThemeProvider
-          value={colorScheme === "dark" ? DarkTheme : DefaultTheme}
-        >
-          <GestureHandlerRootView style={{ flex: 1 }}>
-            <Drawer screenOptions={{}}>
+        <GestureHandlerRootView style={{ flex: 1 }}>
+          <ThemeProvider
+            value={colorScheme === "dark" ? DarkTheme : DefaultTheme}
+          >
+            <Drawer
+              screenOptions={{
+                headerTintColor: Colors.primary,
+                headerStyle: {
+                  backgroundColor: Colors.background,
+                },
+                headerShadowVisible: false,
+                drawerStyle: {
+                  backgroundColor: Colors.background,
+                },
+                sceneContainerStyle: {
+                  backgroundColor: Colors.background,
+                },
+              }}
+            >
               <Drawer.Screen
-                name="(drawer)/index" // Ensure this matches your screen's file name
+                name="(drawer)/index"
                 options={{
                   drawerLabel: "Timer",
                   title: "",
                 }}
               />
               <Drawer.Screen
-                name="(drawer)/history" // Ensure this matches your screen's file name
+                name="(drawer)/history"
                 options={{
                   drawerLabel: "History",
                   title: "History Title",
                 }}
               />
               <Drawer.Screen
-                name="(drawer)/settings" // Ensure this matches your screen's file name
+                name="(drawer)/settings"
                 options={{
                   drawerLabel: "Settings",
                   title: "Settings Title",
                 }}
               />
             </Drawer>
-          </GestureHandlerRootView>
-        </ThemeProvider>
+          </ThemeProvider>
+        </GestureHandlerRootView>
       </PersistGate>
     </Provider>
   );
