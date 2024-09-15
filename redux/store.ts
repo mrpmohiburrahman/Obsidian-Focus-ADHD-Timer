@@ -27,7 +27,7 @@ const rootReducer = combineReducers({
 const persistConfig = {
   key: "root",
   storage: mmkvStorage, // Use the custom MMKV storage adapter
-  whitelist: ["timer"], // Specify which slices to persist
+  whitelist: ["timer", "xp"], // Specify which slices to persist
 };
 
 // Create a persisted reducer
