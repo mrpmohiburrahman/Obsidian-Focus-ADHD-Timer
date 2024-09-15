@@ -1,15 +1,24 @@
 // screens/HistoryScreen.tsx
 
-import React, { useMemo } from 'react';
-import { View, Text, StyleSheet, FlatList, Dimensions, ScrollView } from 'react-native';
-import { useSelector } from 'react-redux';
-import { RootState } from '@/redux/store';
-import { Card, Title, Paragraph } from 'react-native-paper';
-import { LineChart } from 'react-native-chart-kit';
-import moment from 'moment';
-import { Colors } from '@/constants/Colors';
+import React, { useMemo } from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  FlatList,
+  Dimensions,
+  ScrollView,
+} from "react-native";
+import { useSelector } from "react-redux";
+import { RootState } from "@/redux/store";
+import { Card, Title, Paragraph } from "react-native-paper";
+import { LineChart } from "react-native-chart-kit";
+import moment from "moment";
+import { Colors } from "@/constants/Colors";
+import { moderateScale } from "react-native-size-matters";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-const screenWidth = Dimensions.get('window').width;
+const screenWidth = Dimensions.get("window").width;
 
 const HistoryScreen: React.FC = () => {
   const sessions = useSelector((state: RootState) => state.xp.sessions);
@@ -18,7 +27,7 @@ const HistoryScreen: React.FC = () => {
   const sessionsByDate = useMemo(() => {
     const grouped: { [key: string]: number[] } = {};
 
-    sessions.forEach(session => {
+    sessions.forEach((session) => {
       if (!grouped[session.date]) {
         grouped[session.date] = [];
       }
@@ -32,21 +41,21 @@ const HistoryScreen: React.FC = () => {
   const last7Days = useMemo(() => {
     const days: string[] = [];
     for (let i = 6; i >= 0; i--) {
-      days.push(moment().subtract(i, 'days').format('YYYY-MM-DD'));
+      days.push(moment().subtract(i, "days").format("YYYY-MM-DD"));
     }
     return days;
   }, []);
 
   // Prepare data for the chart
   const chartData = useMemo(() => {
-    const data = last7Days.map(date => {
+    const data = last7Days.map((date) => {
       const durations = sessionsByDate[date] || [];
       const total = durations.reduce((acc, curr) => acc + curr, 0);
       return total / 60; // Convert seconds to minutes
     });
 
     return {
-      labels: last7Days.map(date => moment(date).format('ddd')),
+      labels: last7Days.map((date) => moment(date).format("ddd")),
       datasets: [
         {
           data: data,
@@ -57,7 +66,7 @@ const HistoryScreen: React.FC = () => {
 
   // Prepare list data
   const listData = useMemo(() => {
-    return last7Days.map(date => {
+    return last7Days.map((date) => {
       const durations = sessionsByDate[date] || [];
       const totalSessions = durations.length;
       const totalDuration = durations.reduce((acc, curr) => acc + curr, 0);
@@ -68,14 +77,36 @@ const HistoryScreen: React.FC = () => {
       };
     });
   }, [last7Days, sessionsByDate]);
-
+  const inset = useSafeAreaInsets();
   return (
-    <ScrollView style={styles.container}>
-      <Text style={styles.header}>Session Statistics</Text>
+    <ScrollView
+      style={{
+        flex: 1,
+        padding: 20,
+        paddingTop: inset.top,
+        backgroundColor: Colors.background, // Define in Colors.ts
+      }}
+    >
+      
 
       {/* Chart Section */}
-      <Card style={styles.card}>
-        <Card.Content>
+      <Card
+        style={{
+          backgroundColor: "transparent",
+          borderRadius: 16,
+          marginBottom: 20,
+          // borderWidth: 1,
+          // borderColor: "red",
+        }}
+      >
+        <Card.Content
+          style={
+            {
+              // borderWidth: 1,
+              // borderColor: "cyan",
+            }
+          }
+        >
           <Title>Total Time Spent (Last 7 Days)</Title>
           <LineChart
             data={chartData}
@@ -93,15 +124,18 @@ const HistoryScreen: React.FC = () => {
                 borderRadius: 16,
               },
               propsForDots: {
-                r: '6',
-                strokeWidth: '2',
-                stroke: '#ffa726',
+                r: "6",
+                strokeWidth: "2",
+                stroke: "#ffa726",
               },
             }}
             bezier
             style={{
-              marginVertical: 8,
+              // marginVertical: 8,
+              marginLeft: moderateScale(-18),
               borderRadius: 16,
+              // borderWidth: 1,
+              // borderColor: "red",
             }}
           />
         </Card.Content>
@@ -117,10 +151,16 @@ const HistoryScreen: React.FC = () => {
             <Card style={styles.listCard}>
               <Card.Content>
                 <View style={styles.listItem}>
-                  <Text style={styles.dateText}>{moment(item.date).format('MMMM Do')}</Text>
+                  <Text style={styles.dateText}>
+                    {moment(item.date).format("MMMM Do")}
+                  </Text>
                   <View style={styles.stats}>
-                    <Text style={styles.statText}>Sessions: {item.totalSessions}</Text>
-                    <Text style={styles.statText}>Total: {item.totalDuration}m</Text>
+                    <Text style={styles.statText}>
+                      Sessions: {item.totalSessions}
+                    </Text>
+                    <Text style={styles.statText}>
+                      Total: {item.totalDuration}m
+                    </Text>
                   </View>
                 </View>
               </Card.Content>
@@ -133,53 +173,39 @@ const HistoryScreen: React.FC = () => {
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 20,
-    backgroundColor: Colors.background, // Define in Colors.ts
-  },
-  header: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#FFFFFF',
-    marginBottom: 20,
-    textAlign: 'center',
-  },
+  container: {},
+  header: {},
   subHeader: {
     fontSize: 20,
-    fontWeight: '600',
-    color: '#FFFFFF',
+    fontWeight: "600",
+    color: "#FFFFFF",
     marginBottom: 10,
   },
-  card: {
-    backgroundColor: 'transparent',
-    borderRadius: 16,
-    marginBottom: 20,
-  },
+  card: {},
   listContainer: {
     flex: 1,
   },
   listCard: {
-    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+    backgroundColor: "rgba(255, 255, 255, 0.1)",
     borderRadius: 12,
     marginBottom: 10,
   },
   listItem: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
   },
   dateText: {
     fontSize: 16,
-    color: '#FFFFFF',
-    fontWeight: '500',
+    color: "#FFFFFF",
+    fontWeight: "500",
   },
   stats: {
-    alignItems: 'flex-end',
+    alignItems: "flex-end",
   },
   statText: {
     fontSize: 14,
-    color: '#FFFFFF',
+    color: "#FFFFFF",
   },
 });
 
