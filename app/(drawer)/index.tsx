@@ -84,15 +84,16 @@ const Index: React.FC<IndexProps> = () => {
     <SafeAreaView style={styles.container}>
       <Image
         style={styles.backgroundImage}
-        source={require("@/assets/images/emperor.png")}
+        source={require("@/assets/images/yeoman.png")}
         placeholder={{ blurhash }}
         contentFit="cover"
         transition={1000}
       />
 
       <BlurView
-        intensity={40}
-        tint="systemUltraThinMaterialLight"
+        intensity={80}
+        // tint="systemUltraThinMaterialLight"
+        tint="systemUltraThinMaterialDark"
         style={styles.blurView}
       >
         {/* Header */}
@@ -188,6 +189,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: moderateScale(24),
     color: "#FFFFFF", // White text
+    // color: Colors.light.text,
     fontWeight: "bold",
   },
   // Styles for XP and Rank display
