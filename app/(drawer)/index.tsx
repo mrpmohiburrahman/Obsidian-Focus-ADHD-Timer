@@ -5,9 +5,16 @@ import TimerDisplay from "@/components/TimerDisplay";
 import TimerInput from "@/components/TimerInput";
 import { Colors } from "@/constants/Colors";
 import { useTimer } from "@/hooks/useTimer";
-import React from "react";
-import { SafeAreaView, StyleSheet, Text, View } from "react-native";
+import { addSession, resetXpState } from "@/redux/slices/xpSlice";
+import { RootState } from "@/redux/store";
+import React, { useEffect, useRef } from "react";
+import { Button, SafeAreaView, StyleSheet, Text, View } from "react-native";
 import { moderateScale } from "react-native-size-matters";
+
+// Import useSelector and useDispatch from react-redux
+import { useSelector, useDispatch } from "react-redux";
+// Import the addSession action from xpSlice
+// import { addSession } from "@/store/xpSlice";
 
 type IndexProps = {};
 
@@ -41,11 +48,54 @@ const Index: React.FC<IndexProps> = () => {
   // Calculate progress for the current interval
   const progress = fixedTime === 0 ? 0 : (elapsedTime % fixedTime) / fixedTime;
 
+  // Get XP and Rank from Redux store
+  const xp = useSelector((state: RootState) => state.xp.xp);
+  const rank = useSelector((state: RootState) => state.xp.rank);
+
+  const xpState = useSelector((state: RootState) => state.xp);
+  // console.log("🚀 ~ xpState:", xpState);
+  // Dispatch to send actions to the store
+  const dispatch = useDispatch();
+
+  // Reference to keep track of previous lap count
+  const previousLapCountRef = useRef<number>(lapCount);
+
+  // UseEffect to update XP and Rank when a new lap is completed
+  useEffect(() => {
+    if (lapCount > previousLapCountRef.current) {
+      // A new lap has been completed
+      const lastLapDuration = fixedTime; // Duration of the completed session
+
+      // Dispatch addSession action with the session length
+      dispatch(addSession({ sessionLength: lastLapDuration }));
+
+      // Update the previous lap count
+      previousLapCountRef.current = lapCount;
+    }
+  }, [lapCount]);
+
+  // Handle reset to reset previous lap count reference
+  const handleReset = () => {
+    reset();
+    previousLapCountRef.current = 0;
+  };
+
   return (
     <SafeAreaView style={styles.container}>
+      {/* <Button
+        title="reset to initial state"
+        onPress={() => {
+          dispatch(resetXpState());
+        }}
+      /> */}
       {/* Header */}
       <View style={styles.header}>
         <Text style={styles.title}>Focus Quest</Text>
+        {/* XP and Rank Display */}
+        <View style={styles.statusContainer}>
+          <Text style={styles.statusText}>Rank: {rank}</Text>
+          <Text style={styles.statusText}>XP: {xp}</Text>
+        </View>
       </View>
 
       {/* Content */}
@@ -67,7 +117,7 @@ const Index: React.FC<IndexProps> = () => {
           isRunning={isRunning}
           onStart={start}
           onPause={pause}
-          onReset={reset}
+          onReset={handleReset} // Use handleReset to reset lap count
         />
       </View>
     </SafeAreaView>
@@ -89,6 +139,16 @@ const styles = StyleSheet.create({
     fontSize: moderateScale(24),
     color: "#FFFFFF", // White text
     fontWeight: "bold",
+  },
+  // Styles for XP and Rank display
+  statusContainer: {
+    marginTop: moderateScale(10),
+    alignItems: "center",
+  },
+  statusText: {
+    fontSize: moderateScale(16),
+    color: "#FFFFFF",
+    fontWeight: "500",
   },
   content: {
     flex: 1,

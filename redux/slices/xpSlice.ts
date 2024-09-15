@@ -159,10 +159,16 @@ const xpSlice = createSlice({
     resetConsecutiveDays: (state) => {
       state.consecutiveDays = 0;
     },
+    // Add the resetState reducer
+    resetXpState: () => initialState,
   },
 });
 
-export const { addSession, resetConsecutiveSessions, resetConsecutiveDays } =
-  xpSlice.actions;
+export const {
+  addSession,
+  resetConsecutiveSessions,
+  resetConsecutiveDays,
+  resetXpState,
+} = xpSlice.actions;
 
 export default xpSlice.reducer;
