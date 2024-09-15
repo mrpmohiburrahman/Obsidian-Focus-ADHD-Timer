@@ -2,7 +2,7 @@
 
 import { formatTime } from "@/utils/formatTime";
 import React from "react";
-import { View } from "react-native";
+import { View, StyleSheet } from "react-native";
 import * as Progress from "react-native-progress";
 import { moderateScale } from "react-native-size-matters";
 
@@ -22,14 +22,7 @@ const TimerDisplay: React.FC<TimerDisplayProps> = ({
   isAnimated,
 }) => {
   return (
-    <View
-      style={{
-        alignItems: "center",
-        marginVertical: 40,
-        borderWidth: 1,
-        borderColor: "white",
-      }}
-    >
+    <View style={styles.container}>
       <Progress.Circle
         size={moderateScale(250)}
         progress={progress}
@@ -40,12 +33,26 @@ const TimerDisplay: React.FC<TimerDisplayProps> = ({
         borderWidth={0}
         animated={isAnimated}
         strokeCap="round"
-        formatText={() => {
-          return formatTime(Math.floor(elapsedTime));
-        }}
+        formatText={() => formatTime(Math.floor(elapsedTime))}
+        textStyle={styles.text}
+        accessibilityLabel={`Timer is at ${formatTime(
+          Math.floor(elapsedTime)
+        )}`}
       />
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    alignItems: "center",
+    marginVertical: moderateScale(40),
+  },
+  text: {
+    color: "#FFFFFF",
+    fontSize: moderateScale(40),
+    fontWeight: "semibold",
+  },
+});
 
 export default TimerDisplay;

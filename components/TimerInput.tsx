@@ -9,6 +9,7 @@ import {
   StyleSheet,
   Button,
   Platform,
+  Alert,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { Picker } from "@react-native-picker/picker";
@@ -41,33 +42,45 @@ const TimerInput: React.FC<TimerInputProps> = ({ fixedTime, setFixedTime }) => {
       setFixedTime(totalSeconds);
       setModalVisible(false);
     } else {
-      alert("Please set a time greater than zero.");
+      Alert.alert("Invalid Time", "Please set a time greater than zero.");
     }
+  };
+
+  const handlePress = () => {
+    setModalVisible(true);
   };
 
   return (
     <View style={styles.container}>
-      <Text style={styles.label}>Fixed Time:</Text>
       <TouchableOpacity
         style={styles.iconButton}
-        onPress={() => setModalVisible(true)}
+        onPress={handlePress}
         accessibilityLabel="Set Timer Duration"
         accessibilityRole="button"
+        accessibilityHint="Opens the timer duration settings"
+        activeOpacity={0.7}
       >
-        <Ionicons name="time-outline" size={30} color="#FFFFFF" />
+        <Ionicons
+          name="time-outline"
+          size={moderateScale(30)}
+          color="#FFFFFF"
+        />
         <Text style={styles.timeText}>{formatTime(fixedTime)}</Text>
       </TouchableOpacity>
 
       <Modal
         visible={modalVisible}
         transparent={true}
-        animationType="fade" // Changed to 'fade' for smoother appearance
+        animationType="fade"
         onRequestClose={() => setModalVisible(false)}
+        accessible={true}
+        accessibilityViewIsModal={true}
       >
         <View style={styles.modalBackground}>
           <View style={styles.modalContainer}>
             <Text style={styles.modalTitle}>Set Timer Duration</Text>
             <View style={styles.pickersContainer}>
+              {/* Hours Picker */}
               <View style={styles.pickerWrapper}>
                 <Text style={styles.pickerLabel}>Hours</Text>
                 <Picker
@@ -78,12 +91,15 @@ const TimerInput: React.FC<TimerInputProps> = ({ fixedTime, setFixedTime }) => {
                   itemStyle={
                     Platform.OS === "ios" ? styles.pickerItem : undefined
                   }
+                  accessibilityLabel="Hours Picker"
                 >
                   {Array.from({ length: 24 }, (_, i) => (
                     <Picker.Item key={i} label={`${i}`} value={i} />
                   ))}
                 </Picker>
               </View>
+
+              {/* Minutes Picker */}
               <View style={styles.pickerWrapper}>
                 <Text style={styles.pickerLabel}>Minutes</Text>
                 <Picker
@@ -94,12 +110,15 @@ const TimerInput: React.FC<TimerInputProps> = ({ fixedTime, setFixedTime }) => {
                   itemStyle={
                     Platform.OS === "ios" ? styles.pickerItem : undefined
                   }
+                  accessibilityLabel="Minutes Picker"
                 >
                   {Array.from({ length: 60 }, (_, i) => (
                     <Picker.Item key={i} label={`${i}`} value={i} />
                   ))}
                 </Picker>
               </View>
+
+              {/* Seconds Picker */}
               <View style={styles.pickerWrapper}>
                 <Text style={styles.pickerLabel}>Seconds</Text>
                 <Picker
@@ -110,6 +129,7 @@ const TimerInput: React.FC<TimerInputProps> = ({ fixedTime, setFixedTime }) => {
                   itemStyle={
                     Platform.OS === "ios" ? styles.pickerItem : undefined
                   }
+                  accessibilityLabel="Seconds Picker"
                 >
                   {Array.from({ length: 60 }, (_, i) => (
                     <Picker.Item key={i} label={`${i}`} value={i} />
@@ -123,6 +143,7 @@ const TimerInput: React.FC<TimerInputProps> = ({ fixedTime, setFixedTime }) => {
                   title="Cancel"
                   onPress={() => setModalVisible(false)}
                   color={Platform.OS === "ios" ? "#BB86FC" : "#FF3B30"}
+                  accessibilityLabel="Cancel Timer Settings"
                 />
               </View>
               <View style={styles.buttonContainer}>
@@ -130,6 +151,7 @@ const TimerInput: React.FC<TimerInputProps> = ({ fixedTime, setFixedTime }) => {
                   title="Confirm"
                   onPress={handleConfirm}
                   color={Platform.OS === "ios" ? "#03DAC6" : "#34C759"}
+                  accessibilityLabel="Confirm Timer Settings"
                 />
               </View>
             </View>

@@ -26,10 +26,11 @@ const TimerControls: React.FC<TimerControlsProps> = ({
         style={styles.playPauseButton}
         accessibilityLabel={isRunning ? "Pause Timer" : "Start Timer"}
         accessibilityRole="button"
+        activeOpacity={0.7} // Adds touch feedback
       >
         <Ionicons
           name={isRunning ? "pause" : "play"}
-          size={moderateScale(30)} // Adjusted size for better fit
+          size={moderateScale(40)} // Increased size for better visibility
           color="#FFFFFF" // White icon for contrast
         />
       </TouchableOpacity>
@@ -40,10 +41,11 @@ const TimerControls: React.FC<TimerControlsProps> = ({
         style={styles.resetButton}
         accessibilityLabel="Reset Timer"
         accessibilityRole="button"
+        activeOpacity={0.7} // Adds touch feedback
       >
         <Ionicons
           name="refresh"
-          size={moderateScale(20)} // Adjusted size for better fit
+          size={moderateScale(25)} // Slightly increased size for better fit
           color="#FFFFFF" // White icon for contrast
         />
       </TouchableOpacity>
@@ -53,10 +55,8 @@ const TimerControls: React.FC<TimerControlsProps> = ({
 
 const styles = StyleSheet.create({
   container: {
-    // flexDirection: "row", // Arrange buttons horizontally
-    justifyContent: "center", // Center buttons horizontally
-    alignItems: "center", // Center buttons vertically
-    marginTop: moderateScale(30), // Top margin for spacing
+    justifyContent: "center", // Center Play/Pause button
+    alignItems: "center", // Center vertically
   },
   playPauseButton: {
     width: moderateScale(80), // Button width
@@ -65,7 +65,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#B98FFE", // Primary Color
     justifyContent: "center", // Center icon vertically
     alignItems: "center", // Center icon horizontally
-    // Reduced Glow Effect
+    // Subtle Glow Effect
     shadowColor: "#B98FFE",
     shadowOffset: {
       width: 0,
@@ -75,11 +75,10 @@ const styles = StyleSheet.create({
     shadowRadius: moderateScale(10), // Reduced from 20
     elevation: 5, // Reduced from 10
   },
-
   resetButton: {
-    position: "absolute",
-    right: moderateScale(35),
     // marginLeft: moderateScale(30), // Space between Play/Pause and Reset
+    position: "absolute",
+    right: moderateScale(30),
     width: moderateScale(40), // Button width
     height: moderateScale(40), // Button height
     borderRadius: moderateScale(20), // Circular shape
