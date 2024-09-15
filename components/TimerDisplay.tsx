@@ -21,6 +21,9 @@ const TimerDisplay: React.FC<TimerDisplayProps> = ({
   elapsedTime,
   isAnimated,
 }) => {
+  // Reduce the opacity of the unfilled color
+  const unfilledColorWithOpacity = unfilledColor + "55"; // 33% opacity
+
   return (
     <View style={styles.container}>
       <Progress.Circle
@@ -28,8 +31,8 @@ const TimerDisplay: React.FC<TimerDisplayProps> = ({
         progress={progress}
         showsText={true}
         thickness={10}
-        color={color} // Dynamic color based on lapCount
-        unfilledColor={unfilledColor} // Set to previous fill color
+        color={color}
+        unfilledColor={unfilledColorWithOpacity}
         borderWidth={0}
         animated={isAnimated}
         strokeCap="round"
@@ -51,7 +54,7 @@ const styles = StyleSheet.create({
   text: {
     color: "#FFFFFF",
     fontSize: moderateScale(40),
-    fontWeight: "semibold",
+    fontWeight: "600",
   },
 });
 

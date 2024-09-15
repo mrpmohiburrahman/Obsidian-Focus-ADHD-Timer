@@ -25,14 +25,15 @@ const Index: React.FC<IndexProps> = () => {
   } = useTimer();
 
   // Define color palette inside the main component for consistent access
+  // Index.tsx
+
   const colors: string[] = [
     "#BB86FC", // Purple
-    "#03DAC6", // Teal
-    "#CF6679", // Pink
     "#FF9800", // Orange
+    "#03DAC6", // Teal
+    "#FFC107", // Amber
     "#8BC34A", // Light Green
   ];
-
   // Calculate current and previous colors
   const currentColor: string = colors[lapCount % colors.length];
   const previousColor: string =
