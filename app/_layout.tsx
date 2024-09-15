@@ -102,20 +102,3 @@ export default function RootLayout() {
     </Provider>
   );
 }
-
-const styles = StyleSheet.create({
-  backgroundImage: {
-    flex: 1,
-    justifyContent: "space-between",
-  },
-  hamburgerContainer: {
-    marginLeft: moderateScale(10),
-    // iOS shadow
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.3,
-    shadowRadius: 4,
-    // Android shadow
-    elevation: 5,
-  },
-});
