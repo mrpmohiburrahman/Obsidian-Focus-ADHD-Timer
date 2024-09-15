@@ -6,12 +6,11 @@
 
 export const Colors = {
   primary: "#B98FFE", // Original primary color
+  secondary: "#6F41A5", // Darker version of primary color, previously drawerActiveBackgroundColor
   background: "#212327", // App background color
   firstUnfilledColor: "#2D2F33", // Slightly lighter than the background
-  // Alternatively, as an array if you prefer to iterate over colors
-  colorArray: ["#BB86FC", "#FF9800", "#03DAC6", "#FFC107", "#8BC34A"],
+  colorArray: ["#BB86FC", "#FF9800", "#03DAC6", "#FFC107", "#8BC34A"], // Color palette
   // Adjusted colors for the drawer
-  drawerActiveBackgroundColor: "#6F41A5", // Darker version of primary color
   drawerInactiveBackgroundColor: "#212327", // Matches app background
   drawerActiveTintColor: "#FFFFFF", // White text for active item
   drawerInactiveTintColor: "#BBBBBB", // Gray text for inactive items

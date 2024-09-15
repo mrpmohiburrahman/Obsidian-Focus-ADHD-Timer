@@ -4,6 +4,7 @@ import React from "react";
 import { View, StyleSheet, TouchableOpacity, Platform } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { moderateScale } from "react-native-size-matters";
+import { Colors } from "@/constants/Colors";
 
 type TimerControlsProps = {
   isRunning: boolean;
@@ -62,11 +63,11 @@ const styles = StyleSheet.create({
     width: moderateScale(80), // Button width
     height: moderateScale(80), // Button height
     borderRadius: moderateScale(40), // Circular shape
-    backgroundColor: "#B98FFE", // Primary Color
+    backgroundColor: Colors.secondary, // Primary Color
     justifyContent: "center", // Center icon vertically
     alignItems: "center", // Center icon horizontally
     // Subtle Glow Effect
-    shadowColor: "#B98FFE",
+    shadowColor: Colors.secondary,
     shadowOffset: {
       width: 0,
       height: 0,

@@ -58,10 +58,11 @@ export default function RootLayout() {
                 sceneContainerStyle: {
                   backgroundColor: Colors.background,
                 },
-                drawerActiveBackgroundColor: "#3A3D42", // Adjusted background color
-                drawerInactiveBackgroundColor: Colors.background,
-                drawerActiveTintColor: "#FFFFFF",
-                drawerInactiveTintColor: "#BBBBBB",
+                drawerActiveBackgroundColor: Colors.secondary,
+                drawerInactiveBackgroundColor:
+                  Colors.drawerInactiveBackgroundColor,
+                drawerActiveTintColor: Colors.drawerActiveTintColor,
+                drawerInactiveTintColor: Colors.drawerInactiveTintColor,
               }}
             >
               <Drawer.Screen
