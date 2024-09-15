@@ -1,7 +1,14 @@
 // Index.tsx
 
 import React, { useEffect, useRef } from "react";
-import { SafeAreaView, StyleSheet, Text, View, Dimensions } from "react-native";
+import {
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  View,
+  Dimensions,
+  Button,
+} from "react-native";
 import { moderateScale } from "react-native-size-matters";
 import { BlurView } from "expo-blur";
 import { Image } from "expo-image";
@@ -80,6 +87,11 @@ const Index: React.FC<IndexProps> = () => {
     previousLapCountRef.current = 0;
   };
 
+  const handleSessionComplete = () => {
+    console.log("🚀 ~ handleSessionComplete ~ handleSessionComplete: pressed");
+    const sessionLengthInSeconds = 1500; // Example: 25 minutes
+    dispatch(addSession({ sessionLength: sessionLengthInSeconds }));
+  };
   return (
     <SafeAreaView style={styles.container}>
       <Image
@@ -104,6 +116,7 @@ const Index: React.FC<IndexProps> = () => {
             <Text style={styles.statusText}>Rank: {rank}</Text>
             <Text style={styles.statusText}>XP: {xp}</Text>
           </View>
+      <Button title="Complete Session" onPress={handleSessionComplete} />
         </View>
       </BlurView>
 

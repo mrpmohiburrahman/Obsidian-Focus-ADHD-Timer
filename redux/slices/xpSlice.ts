@@ -1,6 +1,13 @@
 // store/xpSlice.ts
 
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import moment from "moment";
+
+interface Session {
+  id: string;
+  date: string; // ISO date string (YYYY-MM-DD)
+  duration: number; // in seconds
+}
 
 interface XpState {
   xp: number;
@@ -10,6 +17,7 @@ interface XpState {
   rank: string;
   lastSessionDate: string | null; // ISO date string
   consecutiveDays: number;
+  sessions: Session[]; // Added to track individual sessions
 }
 
 const initialState: XpState = {
@@ -20,6 +28,7 @@ const initialState: XpState = {
   rank: "Peasant",
   lastSessionDate: null,
   consecutiveDays: 0,
+  sessions: [], // Initialize as empty array
 };
 
 const xpThresholds: { [key: number]: string } = {
@@ -38,6 +47,22 @@ const xpThresholds: { [key: number]: string } = {
   20000: "King",
   30000: "Emperor",
 };
+
+// Helper function to determine rank based on XP
+const determineRank = (xp: number): string => {
+  let newRank = "Peasant";
+  for (const threshold in xpThresholds) {
+    if (xp >= parseInt(threshold)) {
+      newRank = xpThresholds[threshold];
+    } else {
+      break;
+    }
+  }
+  return newRank;
+};
+
+// Helper function to get today's date in YYYY-MM-DD format
+const getToday = (): string => moment().format("YYYY-MM-DD");
 
 const xpSlice = createSlice({
   name: "xp",
@@ -95,7 +120,7 @@ const xpSlice = createSlice({
       });
 
       // Daily Use Bonus
-      const today = new Date().toISOString().split("T")[0];
+      const today = getToday();
       let dailyBonus = 0;
       let consecutiveDayBonus = 0;
 
@@ -106,9 +131,7 @@ const xpSlice = createSlice({
         // Check for consecutive days
         if (
           state.lastSessionDate &&
-          new Date(today).getTime() -
-            new Date(state.lastSessionDate).getTime() ===
-            86400000 // 1 day in milliseconds
+          moment(today).diff(moment(state.lastSessionDate), "days") === 1
         ) {
           state.consecutiveDays += 1;
         } else {
@@ -142,15 +165,16 @@ const xpSlice = createSlice({
       state.xp += totalXpGained;
       state.sessionCount += 1;
 
+      // Add the session to the sessions array
+      const newSession: Session = {
+        id: Date.now().toString(), // Simple unique ID based on timestamp
+        date: today,
+        duration: sessionLength,
+      };
+      state.sessions.push(newSession);
+
       // Update Rank
-      let newRank = state.rank;
-      for (const threshold in xpThresholds) {
-        if (state.xp >= parseInt(threshold)) {
-          newRank = xpThresholds[threshold];
-        } else {
-          break;
-        }
-      }
+      const newRank = determineRank(state.xp);
       state.rank = newRank;
     },
     resetConsecutiveSessions: (state) => {
@@ -159,7 +183,6 @@ const xpSlice = createSlice({
     resetConsecutiveDays: (state) => {
       state.consecutiveDays = 0;
     },
-    // Add the resetState reducer
     resetXpState: () => initialState,
   },
 });
@@ -172,3 +195,25 @@ export const {
 } = xpSlice.actions;
 
 export default xpSlice.reducer;
+
+// Selectors
+
+// Selector to get all sessions
+export const selectAllSessions = (state: { xp: XpState }) => state.xp.sessions;
+
+// Selector to get sessions for a specific date
+export const selectSessionsByDate = (date: string) => (state: { xp: XpState }) =>
+  state.xp.sessions.filter(session => session.date === date);
+
+// Selector to get sessions for the last 7 days
+export const selectLast7DaysSessions = (state: { xp: XpState }) => {
+  const last7Days: string[] = [];
+  for (let i = 6; i >= 0; i--) {
+    last7Days.push(moment().subtract(i, 'days').format('YYYY-MM-DD'));
+  }
+
+  return last7Days.map(date => ({
+    date,
+    sessions: state.xp.sessions.filter(session => session.date === date),
+  }));
+};
