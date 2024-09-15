@@ -5,6 +5,7 @@ import { View, StyleSheet, TouchableOpacity, Platform } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { moderateScale } from "react-native-size-matters";
 import { Colors } from "@/constants/Colors";
+import { BlurView } from "expo-blur";
 
 type TimerControlsProps = {
   isRunning: boolean;
@@ -20,37 +21,46 @@ const TimerControls: React.FC<TimerControlsProps> = ({
   onReset,
 }) => {
   return (
-    <View style={styles.container}>
-      {/* Play/Pause Button */}
-      <TouchableOpacity
-        onPress={isRunning ? onPause : onStart}
-        style={styles.playPauseButton}
-        accessibilityLabel={isRunning ? "Pause Timer" : "Start Timer"}
-        accessibilityRole="button"
-        activeOpacity={0.7} // Adds touch feedback
-      >
-        <Ionicons
-          name={isRunning ? "pause" : "play"}
-          size={moderateScale(40)} // Increased size for better visibility
-          color="#FFFFFF" // White icon for contrast
-        />
-      </TouchableOpacity>
+    <BlurView
+      intensity={20}
+      tint="systemUltraThinMaterialLight"
+      style={{
+        overflow: "hidden",
+        borderRadius: moderateScale(250),
+      }}
+    >
+      <View style={styles.container}>
+        {/* Play/Pause Button */}
+        <TouchableOpacity
+          onPress={isRunning ? onPause : onStart}
+          style={styles.playPauseButton}
+          accessibilityLabel={isRunning ? "Pause Timer" : "Start Timer"}
+          accessibilityRole="button"
+          activeOpacity={0.7} // Adds touch feedback
+        >
+          <Ionicons
+            name={isRunning ? "pause" : "play"}
+            size={moderateScale(40)} // Increased size for better visibility
+            color="#FFFFFF" // White icon for contrast
+          />
+        </TouchableOpacity>
 
-      {/* Reset Button */}
-      <TouchableOpacity
-        onPress={onReset}
-        style={styles.resetButton}
-        accessibilityLabel="Reset Timer"
-        accessibilityRole="button"
-        activeOpacity={0.7} // Adds touch feedback
-      >
-        <Ionicons
-          name="refresh"
-          size={moderateScale(25)} // Slightly increased size for better fit
-          color="#FFFFFF" // White icon for contrast
-        />
-      </TouchableOpacity>
-    </View>
+        {/* Reset Button */}
+        <TouchableOpacity
+          onPress={onReset}
+          style={styles.resetButton}
+          accessibilityLabel="Reset Timer"
+          accessibilityRole="button"
+          activeOpacity={0.7} // Adds touch feedback
+        >
+          <Ionicons
+            name="refresh"
+            size={moderateScale(25)} // Slightly increased size for better fit
+            color="#FFFFFF" // White icon for contrast
+          />
+        </TouchableOpacity>
+      </View>
+    </BlurView>
   );
 };
 
