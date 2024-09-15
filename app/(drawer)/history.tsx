@@ -8,7 +8,6 @@ import React, { useMemo, useState } from "react";
 import {
   Dimensions,
   FlatList,
-  ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -25,6 +24,12 @@ const screenWidth = Dimensions.get("window").width;
 interface WeekData {
   startOfWeek: string; // YYYY-MM-DD
   endOfWeek: string; // YYYY-MM-DD
+}
+
+interface ListItem {
+  date: string;
+  totalSessions: number;
+  totalDuration: number; // in minutes
 }
 
 const HistoryScreen: React.FC = () => {
@@ -102,7 +107,7 @@ const HistoryScreen: React.FC = () => {
   }, [datesInWeek, sessionsByDate]);
 
   // Prepare list data
-  const listData = useMemo(() => {
+  const listData = useMemo<ListItem[]>(() => {
     return datesInWeek.map((date) => {
       const durations = sessionsByDate[date] || [];
       const totalSessions = durations.length;
@@ -129,16 +134,9 @@ const HistoryScreen: React.FC = () => {
   // Disable Next Week button if viewing the current week
   const isCurrentWeek = weekIndex === 0;
 
-  return (
-    <ScrollView
-      style={{
-        flex: 1,
-        // padding: 20,
-        paddingHorizontal: 20,
-        paddingTop: inset.top,
-        backgroundColor: Colors.background, // Define in Colors.ts
-      }}
-    >
+  // Render ListHeaderComponent
+  const renderHeader = () => (
+    <>
       {/* Header with Week Navigation */}
       <View style={styles.headerContainer}>
         <TouchableOpacity
@@ -205,34 +203,51 @@ const HistoryScreen: React.FC = () => {
         </Card.Content>
       </Card>
 
-      {/* List Section */}
-      <View style={styles.listContainer}>
-        <Text style={styles.subHeader}>Weekly Summary</Text>
-        <FlatList
-          data={listData}
-          keyExtractor={(item) => item.date}
-          renderItem={({ item }) => (
-            <Card style={styles.listCard}>
-              <Card.Content>
-                <View style={styles.listItem}>
-                  <Text style={styles.dateText}>
-                    {moment(item.date).format("MMMM Do")}
-                  </Text>
-                  <View style={styles.stats}>
-                    <Text style={styles.statText}>
-                      Sessions: {item.totalSessions}
-                    </Text>
-                    <Text style={styles.statText}>
-                      Total: {item.totalDuration}m
-                    </Text>
-                  </View>
-                </View>
-              </Card.Content>
-            </Card>
-          )}
-        />
-      </View>
-    </ScrollView>
+      {/* Summary Header */}
+      <Text style={styles.subHeader}>Weekly Summary</Text>
+    </>
+  );
+
+  // Render ListFooterComponent for additional spacing
+  const renderFooter = () => <View style={styles.footerSpacing} />;
+
+  // Render Item for FlatList
+  const renderItem = ({ item }: { item: ListItem }) => (
+    <Card style={styles.listCard}>
+      <Card.Content>
+        <View style={styles.listItem}>
+          <Text style={styles.dateText}>
+            {moment(item.date).format("MMMM Do")}
+          </Text>
+          <View style={styles.stats}>
+            <Text style={styles.statText}>Sessions: {item.totalSessions}</Text>
+            <Text style={styles.statText}>Total: {item.totalDuration}m</Text>
+          </View>
+        </View>
+      </Card.Content>
+    </Card>
+  );
+
+  // Optional: Show a message if there are no sessions in the selected week
+  const hasSessions = useMemo(() => {
+    return sessionsInWeek.length > 0;
+  }, [sessionsInWeek]);
+
+  const renderEmptyComponent = () => (
+    <Text style={styles.noDataText}>No sessions recorded for this week.</Text>
+  );
+
+  return (
+    <FlatList
+      data={listData}
+      keyExtractor={(item) => item.date}
+      renderItem={renderItem}
+      ListHeaderComponent={renderHeader}
+      ListFooterComponent={renderFooter}
+      ListEmptyComponent={renderEmptyComponent}
+      contentContainerStyle={styles.contentContainer}
+      showsVerticalScrollIndicator={false}
+    />
   );
 };
 
@@ -241,7 +256,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    marginBottom: moderateScale(20),
+    // marginBottom: moderateScale(20),
   },
   navButton: {
     padding: moderateScale(10),
@@ -293,6 +308,21 @@ const styles = StyleSheet.create({
     fontWeight: "600",
     color: "#FFFFFF",
     marginBottom: moderateScale(10),
+  },
+  footerSpacing: {
+    height: moderateScale(30), // Adjust as needed
+  },
+  noDataText: {
+    fontSize: moderateScale(16),
+    color: "#FFFFFF",
+    textAlign: "center",
+    marginTop: moderateScale(20),
+  },
+  contentContainer: {
+    marginTop: moderateScale(100),
+    paddingBottom: moderateScale(100), // Additional spacing at the bottom
+    paddingTop: moderateScale(0),
+    paddingHorizontal: moderateScale(20),
   },
 });
 
