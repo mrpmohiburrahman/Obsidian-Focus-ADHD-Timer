@@ -1,6 +1,7 @@
 // components/TimerDisplay.tsx
 
 import { formatTime } from "@/utils/formatTime";
+import { BlurView } from "expo-blur";
 import React from "react";
 import { View, StyleSheet } from "react-native";
 import * as Progress from "react-native-progress";
@@ -25,32 +26,58 @@ const TimerDisplay: React.FC<TimerDisplayProps> = ({
   const unfilledColorWithOpacity = unfilledColor + "55"; // 33% opacity
 
   return (
-    <View style={styles.container}>
-      <Progress.Circle
-        size={moderateScale(250)}
-        progress={progress}
-        showsText={true}
-        thickness={10}
-        color={color}
-        unfilledColor={unfilledColorWithOpacity}
-        borderWidth={0}
-        animated={isAnimated}
-        strokeCap="round"
-        formatText={() => formatTime(Math.floor(elapsedTime))}
-        textStyle={styles.text}
-        accessibilityLabel={`Timer is at ${formatTime(
-          Math.floor(elapsedTime)
-        )}`}
-      />
+    <View
+      style={{
+        alignItems: "center",
+        marginVertical: moderateScale(40),
+        // borderWidth: 1,
+        borderColor: "black",
+        borderRadius: 200,
+      }}
+    >
+      <BlurView
+        intensity={40}
+        tint="systemUltraThinMaterialLight"
+        style={{
+          overflow: "hidden",
+          borderRadius: moderateScale(250),
+        }}
+      >
+        <Progress.Circle
+          size={moderateScale(250)}
+          progress={progress}
+          showsText={true}
+          thickness={10}
+          color={color}
+          unfilledColor={unfilledColorWithOpacity}
+          borderWidth={0}
+          animated={isAnimated}
+          strokeCap="round"
+          formatText={() => formatTime(Math.floor(elapsedTime))}
+          textStyle={styles.text}
+          accessibilityLabel={`Timer is at ${formatTime(
+            Math.floor(elapsedTime)
+          )}`}
+        />
+      </BlurView>
+      {/* <BlurView
+        intensity={40}
+        tint="systemUltraThinMaterialLight"
+        style={{
+          borderRadius: 500,
+          height: moderateScale(250),
+          width: moderateScale(250),
+          overflow: "hidden",
+          position: "absolute",
+          zIndex: -1,
+        }}
+      /> */}
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    alignItems: "center",
-    marginVertical: moderateScale(40),
-  },
+  container: {},
   text: {
     color: "#FFFFFF",
     fontSize: moderateScale(40),
