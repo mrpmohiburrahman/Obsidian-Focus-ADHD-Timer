@@ -58,6 +58,10 @@ export default function RootLayout() {
                 sceneContainerStyle: {
                   backgroundColor: Colors.background,
                 },
+                drawerActiveBackgroundColor: "#3A3D42", // Adjusted background color
+                drawerInactiveBackgroundColor: Colors.background,
+                drawerActiveTintColor: "#FFFFFF",
+                drawerInactiveTintColor: "#BBBBBB",
               }}
             >
               <Drawer.Screen
@@ -71,14 +75,14 @@ export default function RootLayout() {
                 name="(drawer)/history"
                 options={{
                   drawerLabel: "History",
-                  title: "History Title",
+                  title: "History",
                 }}
               />
               <Drawer.Screen
                 name="(drawer)/settings"
                 options={{
                   drawerLabel: "Settings",
-                  title: "Settings Title",
+                  title: "Settings",
                 }}
               />
             </Drawer>
