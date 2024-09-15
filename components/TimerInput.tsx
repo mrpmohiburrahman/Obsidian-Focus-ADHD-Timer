@@ -15,6 +15,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { Picker } from "@react-native-picker/picker";
 import { formatTime } from "@/utils/formatTime";
 import { moderateScale } from "react-native-size-matters";
+import { BlurView } from "expo-blur";
 
 type TimerInputProps = {
   fixedTime: number;
@@ -52,21 +53,37 @@ const TimerInput: React.FC<TimerInputProps> = ({ fixedTime, setFixedTime }) => {
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity
-        style={styles.iconButton}
-        onPress={handlePress}
-        accessibilityLabel="Set Timer Duration"
-        accessibilityRole="button"
-        accessibilityHint="Opens the timer duration settings"
-        activeOpacity={0.7}
+      <BlurView
+        intensity={40}
+        tint="systemUltraThinMaterialLight"
+        style={{
+          overflow: "hidden",
+          borderRadius: moderateScale(250),
+        }}
       >
-        <Ionicons
-          name="time-outline"
-          size={moderateScale(30)}
-          color="#FFFFFF"
-        />
-        <Text style={styles.timeText}>{formatTime(fixedTime)}</Text>
-      </TouchableOpacity>
+        <TouchableOpacity
+          style={{
+            flexDirection: "row",
+            alignItems: "center",
+            // backgroundColor: "#1E1E1E",
+            paddingVertical: 10,
+            paddingHorizontal: 15,
+            borderRadius: 5,
+          }}
+          onPress={handlePress}
+          accessibilityLabel="Set Timer Duration"
+          accessibilityRole="button"
+          accessibilityHint="Opens the timer duration settings"
+          activeOpacity={0.7}
+        >
+          <Ionicons
+            name="time-outline"
+            size={moderateScale(30)}
+            color="#FFFFFF"
+          />
+          <Text style={styles.timeText}>{formatTime(fixedTime)}</Text>
+        </TouchableOpacity>
+      </BlurView>
 
       <Modal
         visible={modalVisible}
@@ -175,7 +192,7 @@ const styles = StyleSheet.create({
   iconButton: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#1E1E1E",
+    // backgroundColor: "#1E1E1E",
     paddingVertical: 10,
     paddingHorizontal: 15,
     borderRadius: 5,
