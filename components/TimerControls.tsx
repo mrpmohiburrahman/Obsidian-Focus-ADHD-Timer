@@ -1,8 +1,9 @@
-
 // components/TimerControls.tsx
 
 import React from "react";
-import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { View, StyleSheet, TouchableOpacity, Platform } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
+import { moderateScale } from "react-native-size-matters";
 
 type TimerControlsProps = {
   isRunning: boolean;
@@ -19,32 +20,32 @@ const TimerControls: React.FC<TimerControlsProps> = ({
 }) => {
   return (
     <View style={styles.container}>
-      {!isRunning ? (
-        <TouchableOpacity
-          style={styles.button}
-          onPress={onStart}
-          accessibilityLabel="Start Timer"
-          accessibilityRole="button"
-        >
-          <Text style={styles.buttonText}>Start</Text>
-        </TouchableOpacity>
-      ) : (
-        <TouchableOpacity
-          style={styles.button}
-          onPress={onPause}
-          accessibilityLabel="Pause Timer"
-          accessibilityRole="button"
-        >
-          <Text style={styles.buttonText}>Pause</Text>
-        </TouchableOpacity>
-      )}
+      {/* Play/Pause Button */}
       <TouchableOpacity
-        style={styles.button}
+        onPress={isRunning ? onPause : onStart}
+        style={styles.playPauseButton}
+        accessibilityLabel={isRunning ? "Pause Timer" : "Start Timer"}
+        accessibilityRole="button"
+      >
+        <Ionicons
+          name={isRunning ? "pause" : "play"}
+          size={moderateScale(30)} // Adjusted size for better fit
+          color="#FFFFFF" // White icon for contrast
+        />
+      </TouchableOpacity>
+
+      {/* Reset Button */}
+      <TouchableOpacity
         onPress={onReset}
+        style={styles.resetButton}
         accessibilityLabel="Reset Timer"
         accessibilityRole="button"
       >
-        <Text style={styles.buttonText}>Reset</Text>
+        <Ionicons
+          name="refresh"
+          size={moderateScale(20)} // Adjusted size for better fit
+          color="#FFFFFF" // White icon for contrast
+        />
       </TouchableOpacity>
     </View>
   );
@@ -52,25 +53,48 @@ const TimerControls: React.FC<TimerControlsProps> = ({
 
 const styles = StyleSheet.create({
   container: {
-    flexDirection: "row",
-    justifyContent: "space-around",
-    marginBottom: 20,
+    // flexDirection: "row", // Arrange buttons horizontally
+    justifyContent: "center", // Center buttons horizontally
+    alignItems: "center", // Center buttons vertically
+    marginTop: moderateScale(30), // Top margin for spacing
   },
-  button: {
-    backgroundColor: "#BB86FC", // Base color for buttons
-    paddingVertical: 15,
-    paddingHorizontal: 30,
-    borderRadius: 8,
-    elevation: 2, // Add shadow for Android
-    shadowColor: "#000", // Add shadow for iOS
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
+  playPauseButton: {
+    width: moderateScale(80), // Button width
+    height: moderateScale(80), // Button height
+    borderRadius: moderateScale(40), // Circular shape
+    backgroundColor: "#B98FFE", // Primary Color
+    justifyContent: "center", // Center icon vertically
+    alignItems: "center", // Center icon horizontally
+    // Reduced Glow Effect
+    shadowColor: "#B98FFE",
+    shadowOffset: {
+      width: 0,
+      height: 0,
+    },
+    shadowOpacity: 0.3, // Reduced from 0.7
+    shadowRadius: moderateScale(10), // Reduced from 20
+    elevation: 5, // Reduced from 10
   },
-  buttonText: {
-    color: "#FFFFFF",
-    fontSize: 18,
-    fontWeight: "600",
+
+  resetButton: {
+    position: "absolute",
+    right: moderateScale(35),
+    // marginLeft: moderateScale(30), // Space between Play/Pause and Reset
+    width: moderateScale(40), // Button width
+    height: moderateScale(40), // Button height
+    borderRadius: moderateScale(20), // Circular shape
+    backgroundColor: "#c847f4", // Start of Primary Gradient
+    justifyContent: "center", // Center icon vertically
+    alignItems: "center", // Center icon horizontally
+    // Subtle Shadow for Reset Button
+    shadowColor: "#c847f4",
+    shadowOffset: {
+      width: 0,
+      height: 0,
+    },
+    shadowOpacity: 0.3, // Reduced from 0.5
+    shadowRadius: moderateScale(5), // Reduced from 10
+    elevation: 3, // Reduced from 5
   },
 });
 

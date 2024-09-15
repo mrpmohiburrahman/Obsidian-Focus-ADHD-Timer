@@ -13,6 +13,7 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 import { Picker } from "@react-native-picker/picker";
 import { formatTime } from "@/utils/formatTime";
+import { moderateScale } from "react-native-size-matters";
 
 type TimerInputProps = {
   fixedTime: number;
@@ -60,7 +61,7 @@ const TimerInput: React.FC<TimerInputProps> = ({ fixedTime, setFixedTime }) => {
       <Modal
         visible={modalVisible}
         transparent={true}
-        animationType="slide"
+        animationType="fade" // Changed to 'fade' for smoother appearance
         onRequestClose={() => setModalVisible(false)}
       >
         <View style={styles.modalBackground}>
@@ -74,6 +75,9 @@ const TimerInput: React.FC<TimerInputProps> = ({ fixedTime, setFixedTime }) => {
                   style={styles.picker}
                   onValueChange={(itemValue) => setHours(itemValue)}
                   mode="dropdown"
+                  itemStyle={
+                    Platform.OS === "ios" ? styles.pickerItem : undefined
+                  }
                 >
                   {Array.from({ length: 24 }, (_, i) => (
                     <Picker.Item key={i} label={`${i}`} value={i} />
@@ -87,6 +91,9 @@ const TimerInput: React.FC<TimerInputProps> = ({ fixedTime, setFixedTime }) => {
                   style={styles.picker}
                   onValueChange={(itemValue) => setMinutes(itemValue)}
                   mode="dropdown"
+                  itemStyle={
+                    Platform.OS === "ios" ? styles.pickerItem : undefined
+                  }
                 >
                   {Array.from({ length: 60 }, (_, i) => (
                     <Picker.Item key={i} label={`${i}`} value={i} />
@@ -100,6 +107,9 @@ const TimerInput: React.FC<TimerInputProps> = ({ fixedTime, setFixedTime }) => {
                   style={styles.picker}
                   onValueChange={(itemValue) => setSeconds(itemValue)}
                   mode="dropdown"
+                  itemStyle={
+                    Platform.OS === "ios" ? styles.pickerItem : undefined
+                  }
                 >
                   {Array.from({ length: 60 }, (_, i) => (
                     <Picker.Item key={i} label={`${i}`} value={i} />
@@ -108,16 +118,20 @@ const TimerInput: React.FC<TimerInputProps> = ({ fixedTime, setFixedTime }) => {
               </View>
             </View>
             <View style={styles.modalButtons}>
-              <Button
-                title="Cancel"
-                onPress={() => setModalVisible(false)}
-                color={Platform.OS === "ios" ? "#BB86FC" : undefined}
-              />
-              <Button
-                title="Confirm"
-                onPress={handleConfirm}
-                color={Platform.OS === "ios" ? "#03DAC6" : undefined}
-              />
+              <View style={styles.buttonContainer}>
+                <Button
+                  title="Cancel"
+                  onPress={() => setModalVisible(false)}
+                  color={Platform.OS === "ios" ? "#BB86FC" : "#FF3B30"}
+                />
+              </View>
+              <View style={styles.buttonContainer}>
+                <Button
+                  title="Confirm"
+                  onPress={handleConfirm}
+                  color={Platform.OS === "ios" ? "#03DAC6" : "#34C759"}
+                />
+              </View>
             </View>
           </View>
         </View>
@@ -140,7 +154,8 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     backgroundColor: "#1E1E1E",
-    padding: 10,
+    paddingVertical: 10,
+    paddingHorizontal: 15,
     borderRadius: 5,
   },
   timeText: {
@@ -153,6 +168,7 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(0,0,0,0.5)",
     justifyContent: "center",
     alignItems: "center",
+    padding: 20,
   },
   modalContainer: {
     width: "80%",
@@ -171,10 +187,12 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     width: "100%",
+    marginBottom: 20,
   },
   pickerWrapper: {
     flex: 1,
     alignItems: "center",
+    marginHorizontal: 5,
   },
   pickerLabel: {
     color: "#FFFFFF",
@@ -182,15 +200,22 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
   picker: {
-    height: 100,
-    width: 100,
+    height: moderateScale(170), // Reduced height for compactness
+    width: "100%",
     color: "#FFFFFF",
+  },
+  pickerItem: {
+    color: "#FFFFFF",
+    fontSize: 16,
   },
   modalButtons: {
     flexDirection: "row",
-    marginTop: 20,
     width: "100%",
-    justifyContent: "space-around",
+    justifyContent: "space-between",
+  },
+  buttonContainer: {
+    flex: 1,
+    marginHorizontal: 5,
   },
 });
 
