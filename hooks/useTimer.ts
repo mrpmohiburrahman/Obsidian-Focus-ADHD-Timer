@@ -1,4 +1,3 @@
-
 // hooks/useTimer.ts
 
 import { useState, useEffect, useRef } from "react";
@@ -17,7 +16,7 @@ type UseTimerReturnType = {
 };
 
 export const useTimer = (): UseTimerReturnType => {
-  const [fixedTime, setFixedTimeState] = useState<number>(5); // Default 5 seconds
+  const [fixedTime, setFixedTimeState] = useState<number>(300); // Default 5 minutes
   const [elapsedTime, setElapsedTime] = useState<number>(0);
   const [isRunning, setIsRunning] = useState<boolean>(false);
   const [lapCount, setLapCount] = useState<number>(0);
