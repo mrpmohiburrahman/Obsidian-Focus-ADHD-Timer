@@ -84,7 +84,7 @@ const Index: React.FC<IndexProps> = () => {
     <SafeAreaView style={styles.container}>
       <Image
         style={styles.backgroundImage}
-        source={require("@/assets/images/baron.png")}
+        source={require("@/assets/images/viscount.png")}
         placeholder={{ blurhash }}
         contentFit="cover"
         transition={1000}
