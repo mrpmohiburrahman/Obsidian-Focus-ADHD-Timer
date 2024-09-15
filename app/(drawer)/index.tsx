@@ -5,23 +5,17 @@ import TimerDisplay from "@/components/TimerDisplay";
 import TimerInput from "@/components/TimerInput";
 import { Colors } from "@/constants/Colors";
 import { useTimer } from "@/hooks/useTimer";
-import { addSession, resetXpState } from "@/redux/slices/xpSlice";
+import { addSession } from "@/redux/slices/xpSlice";
 import { RootState } from "@/redux/store";
 import React, { useEffect, useRef } from "react";
-import { Button, SafeAreaView, StyleSheet, Text, View } from "react-native";
+import { SafeAreaView, StyleSheet, Text, View } from "react-native";
 import { moderateScale } from "react-native-size-matters";
 
-// Import useSelector and useDispatch from react-redux
-import { useSelector, useDispatch } from "react-redux";
-// Import the addSession action from xpSlice
-// import { addSession } from "@/store/xpSlice";
+import { useDispatch, useSelector } from "react-redux";
 
 type IndexProps = {};
 
-// Define color palette inside the main component for consistent access
 const colors: string[] = Colors.colorArray;
-
-// Adjusted unfilled color for the first session
 const firstUnfilledColor = Colors.firstUnfilledColor; // Slightly lighter than the background
 
 const Index: React.FC<IndexProps> = () => {
@@ -52,14 +46,14 @@ const Index: React.FC<IndexProps> = () => {
   const xp = useSelector((state: RootState) => state.xp.xp);
   const rank = useSelector((state: RootState) => state.xp.rank);
 
-  const xpState = useSelector((state: RootState) => state.xp);
+  // const xpState = useSelector((state: RootState) => state.xp);
   // console.log("🚀 ~ xpState:", xpState);
-  // Dispatch to send actions to the store
-  const dispatch = useDispatch();
 
   // Reference to keep track of previous lap count
   const previousLapCountRef = useRef<number>(lapCount);
 
+  // Dispatch to send actions to the store
+  const dispatch = useDispatch();
   // UseEffect to update XP and Rank when a new lap is completed
   useEffect(() => {
     if (lapCount > previousLapCountRef.current) {
