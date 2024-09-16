@@ -71,25 +71,37 @@ export default function RootLayout() {
             })}
             drawerContent={(props) => <CustomDrawerContent {...props} />} // Use custom Drawer content
           >
+            {/* Timer Screen */}
             <Drawer.Screen
               name="(drawer)/index"
               options={{
                 drawerLabel: "Timer",
                 title: "",
+                // Inherit default header options
               }}
             />
+
+            {/* History Screen with Customized Header */}
             <Drawer.Screen
               name="(drawer)/history"
               options={{
                 drawerLabel: "History",
                 title: "History",
+                headerStyle: {
+                  backgroundColor: Colors.background, // Custom background color for History header
+                },
+                headerTintColor: "#FFFFFF", // Custom text/icon color for History header
+                headerTransparent: false, // Make header opaque to apply background color
               }}
             />
+
+            {/* Settings Screen */}
             <Drawer.Screen
               name="(drawer)/settings"
               options={{
                 drawerLabel: "Settings",
                 title: "Settings",
+                // Inherit default header options
               }}
             />
           </Drawer>
@@ -98,3 +110,7 @@ export default function RootLayout() {
     </Provider>
   );
 }
+
+const styles = StyleSheet.create({
+  // Define any necessary styles here
+});

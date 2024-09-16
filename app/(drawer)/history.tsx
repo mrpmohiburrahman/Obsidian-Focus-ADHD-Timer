@@ -239,20 +239,17 @@ const HistoryScreen: React.FC = () => {
   );
 
   return (
-    <>
-      {/* <LavaLamp count={4} hue="black" intensity={100} duration={20000} /> */}
-
-      <FlatList
-        data={listData}
-        keyExtractor={(item) => item.date}
-        renderItem={renderItem}
-        ListHeaderComponent={renderHeader}
-        ListFooterComponent={renderFooter}
-        ListEmptyComponent={renderEmptyComponent}
-        contentContainerStyle={styles.contentContainer}
-        showsVerticalScrollIndicator={false}
-      />
-    </>
+    <FlatList
+      data={listData}
+      keyExtractor={(item) => item.date}
+      renderItem={renderItem}
+      ListHeaderComponent={renderHeader}
+      ListFooterComponent={renderFooter}
+      ListEmptyComponent={renderEmptyComponent}
+      contentContainerStyle={styles.contentContainer}
+      showsVerticalScrollIndicator={false}
+      style={{ backgroundColor: Colors.background }}
+    />
   );
 };
 
@@ -324,9 +321,8 @@ const styles = StyleSheet.create({
     marginTop: moderateScale(20),
   },
   contentContainer: {
-    marginTop: moderateScale(100),
+    backgroundColor: Colors.background,
     paddingBottom: moderateScale(100), // Additional spacing at the bottom
-    paddingTop: moderateScale(0),
     paddingHorizontal: moderateScale(20),
   },
 });
