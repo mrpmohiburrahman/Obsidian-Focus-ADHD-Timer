@@ -34,7 +34,6 @@ interface ListItem {
 
 const HistoryScreen: React.FC = () => {
   const sessions = useSelector((state: RootState) => state.xp.sessions);
-  const inset = useSafeAreaInsets();
 
   // State to track current week index (0 = current week, 1 = previous week, etc.)
   const [weekIndex, setWeekIndex] = useState<number>(0);
@@ -169,7 +168,6 @@ const HistoryScreen: React.FC = () => {
       {/* Chart Section */}
       <Card style={styles.chartCard}>
         <Card.Content>
-          <Title>Total Time Spent (Selected Week)</Title>
           <View style={styles.chartContainer}>
             <LineChart
               data={chartData}
@@ -227,11 +225,6 @@ const HistoryScreen: React.FC = () => {
       </Card.Content>
     </Card>
   );
-
-  // Optional: Show a message if there are no sessions in the selected week
-  const hasSessions = useMemo(() => {
-    return sessionsInWeek.length > 0;
-  }, [sessionsInWeek]);
 
   const renderEmptyComponent = () => (
     <Text style={styles.noDataText}>No sessions recorded for this week.</Text>
