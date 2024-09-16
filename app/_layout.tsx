@@ -47,56 +47,52 @@ export default function RootLayout() {
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
         <GestureHandlerRootView style={{ flex: 1 }}>
-          <ThemeProvider
-            value={colorScheme === "dark" ? DarkTheme : DefaultTheme}
+          <Drawer
+            screenOptions={({ navigation }) => ({
+              headerTintColor: Colors.primary, // Default tint color
+              headerStyle: {
+                backgroundColor: "transparent",
+              },
+              headerTransparent: true,
+              headerShadowVisible: false,
+              drawerStyle: {
+                backgroundColor: "transparent", // Make sure Drawer itself is transparent to show gradient
+              },
+              sceneContainerStyle: {
+                backgroundColor: "transparent",
+              },
+              drawerActiveBackgroundColor: Colors.secondary,
+              drawerInactiveBackgroundColor:
+                Colors.drawerInactiveBackgroundColor,
+              drawerActiveTintColor: Colors.drawerActiveTintColor,
+              drawerInactiveTintColor: Colors.drawerInactiveTintColor,
+              // Customize the headerLeft component
+              headerLeft: () => <DrawerToggle navigation={navigation} />,
+            })}
+            drawerContent={(props) => <CustomDrawerContent {...props} />} // Use custom Drawer content
           >
-            <Drawer
-              screenOptions={({ navigation }) => ({
-                headerTintColor: Colors.primary, // Default tint color
-                headerStyle: {
-                  backgroundColor: "transparent",
-                },
-                headerTransparent: true,
-                headerShadowVisible: false,
-                drawerStyle: {
-                  backgroundColor: "transparent", // Make sure Drawer itself is transparent to show gradient
-                },
-                sceneContainerStyle: {
-                  backgroundColor: "transparent",
-                },
-                drawerActiveBackgroundColor: Colors.secondary,
-                drawerInactiveBackgroundColor:
-                  Colors.drawerInactiveBackgroundColor,
-                drawerActiveTintColor: Colors.drawerActiveTintColor,
-                drawerInactiveTintColor: Colors.drawerInactiveTintColor,
-                // Customize the headerLeft component
-                headerLeft: () => <DrawerToggle navigation={navigation} />,
-              })}
-              drawerContent={(props) => <CustomDrawerContent {...props} />} // Use custom Drawer content
-            >
-              <Drawer.Screen
-                name="(drawer)/index"
-                options={{
-                  drawerLabel: "Timer",
-                  title: "",
-                }}
-              />
-              <Drawer.Screen
-                name="(drawer)/history"
-                options={{
-                  drawerLabel: "History",
-                  title: "History",
-                }}
-              />
-              <Drawer.Screen
-                name="(drawer)/settings"
-                options={{
-                  drawerLabel: "Settings",
-                  title: "Settings",
-                }}
-              />
-            </Drawer>
-          </ThemeProvider>
+            <Drawer.Screen
+              name="(drawer)/index"
+              options={{
+                drawerLabel: "Timer",
+                title: "",
+              }}
+            />
+            <Drawer.Screen
+              name="(drawer)/history"
+              options={{
+                drawerLabel: "History",
+                title: "History",
+              }}
+            />
+            <Drawer.Screen
+              name="(drawer)/settings"
+              options={{
+                drawerLabel: "Settings",
+                title: "Settings",
+              }}
+            />
+          </Drawer>
         </GestureHandlerRootView>
       </PersistGate>
     </Provider>
