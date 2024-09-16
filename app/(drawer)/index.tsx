@@ -1,12 +1,7 @@
-// Index.tsx
-
 import React, { useEffect, useRef } from "react";
 import { SafeAreaView, StyleSheet, View, Dimensions } from "react-native";
 import { moderateScale } from "react-native-size-matters";
-import { BlurView } from "expo-blur";
 import { Image } from "expo-image";
-import { LinearGradient } from "expo-linear-gradient";
-
 import TimerControls from "@/components/TimerControls";
 import TimerDisplay from "@/components/TimerDisplay";
 import TimerInput from "@/components/TimerInput";
@@ -16,12 +11,12 @@ import { useTimer } from "@/hooks/useTimer";
 import { addSession } from "@/redux/slices/xpSlice";
 import { RootState } from "@/redux/store";
 import { useDispatch, useSelector } from "react-redux";
-import { defaultBlurhash, rankBlurhashes } from "@/constants/rankBlurhashes";
-import { plainBackground, rankBackgrounds } from "@/constants/rankBackgrounds";
-import BackgroundShadows from "@/components/BackgroundShadows";
 import { getBackgrundAndHashs } from "@/utils/getBackgrundAndHashs";
+import BackgroundShadows from "@/components/BackgroundShadows";
+import { playSoundForDuration, stopSound } from "@/hooks/SoundPlayer";
+// import { playSoundForDuration, stopSound } from "@/utils/SoundPlayer"; // Import the sound functions
 
-const { width: WINDOW_WIDTH, height: WINDOW_HEIGHT } = Dimensions.get("window");
+const { height: WINDOW_HEIGHT } = Dimensions.get("window");
 
 const colors: string[] = Colors.colorArray;
 const firstUnfilledColor = Colors.firstUnfilledColor;
@@ -50,7 +45,7 @@ const Index: React.FC = () => {
   const xp = useSelector((state: RootState) => state.xp.xp);
   const rank = useSelector((state: RootState) => state.xp.rank);
 
-  const { usePlainBackground } = useSelector(
+  const { usePlainBackground, notificationsEnabled } = useSelector(
     (state: RootState) => state.settings
   );
 
@@ -59,17 +54,29 @@ const Index: React.FC = () => {
   const previousLapCountRef = useRef<number>(lapCount);
   const dispatch = useDispatch();
 
+  // Ref to track if sound has already been played for this session
+  const soundPlayedRef = useRef<boolean>(false);
+
   useEffect(() => {
+    // Check if lapCount increased, indicating a new session has ended
     if (lapCount > previousLapCountRef.current) {
       const lastLapDuration = fixedTime;
       dispatch(addSession({ sessionLength: lastLapDuration }));
       previousLapCountRef.current = lapCount;
+
+      // Play sound only after the first session ends and only if notifications are enabled
+      if (!soundPlayedRef.current && notificationsEnabled) {
+        playSoundForDuration(10); // Play sound for 10 seconds
+        soundPlayedRef.current = true; // Ensure sound only plays once
+      }
     }
-  }, [lapCount]);
+  }, [lapCount, fixedTime, notificationsEnabled]);
 
   const handleReset = () => {
     reset();
     previousLapCountRef.current = 0;
+    soundPlayedRef.current = false; // Reset sound play state when timer is reset
+    stopSound(); // Stop the sound if playing
   };
 
   return (
