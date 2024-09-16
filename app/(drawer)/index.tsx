@@ -22,12 +22,10 @@ import { useTimer } from "@/hooks/useTimer";
 import { addSession } from "@/redux/slices/xpSlice";
 import { RootState } from "@/redux/store";
 import { useDispatch, useSelector } from "react-redux";
+import { defaultBlurhash, rankBlurhashes } from "@/constants/rankBlurhashes";
 import { rankBackgrounds } from "@/constants/rankBackgrounds";
 
 const { width: WINDOW_WIDTH, height: WINDOW_HEIGHT } = Dimensions.get("window");
-
-const blurhash =
-  "|rF?hV%2WCj[ayj[a|j[az_NaeWBj@ayfRayfQfQM{M|azj[azf6fQfQfQIpWXofj[ayj[j[fQayWCoeoeaya}j[ayfQa{oLj?j[WVj[ayayj[fQoff7azayj[ayj[j[ayofayayayj[fQj[ayayj[ayfjj[j[ayjuayj[";
 
 type IndexProps = {};
 
@@ -69,6 +67,9 @@ const Index: React.FC<IndexProps> = () => {
   const backgroundImageSource =
     rankBackgrounds[rank] || rankBackgrounds["Peasant"];
 
+  // Get blurhash based on rank
+  const backgroundBlurhash = rankBlurhashes[rank] || defaultBlurhash;
+
   // Reference to keep track of previous lap count
   const previousLapCountRef = useRef<number>(lapCount);
 
@@ -106,7 +107,7 @@ const Index: React.FC<IndexProps> = () => {
         <Image
           style={styles.backgroundImage}
           source={backgroundImageSource}
-          placeholder={{ blurhash }}
+          placeholder={{ blurhash: backgroundBlurhash }}
           contentFit="cover"
           transition={1000}
         />
@@ -214,7 +215,6 @@ const styles = StyleSheet.create({
     color: "#FFFFFF", // White text
     fontWeight: "bold",
   },
-  // Styles for XP and Rank display
   statusContainer: {
     marginTop: moderateScale(10),
     alignItems: "center",
