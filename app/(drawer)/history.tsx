@@ -1,6 +1,5 @@
 // screens/HistoryScreen.tsx
 
-import { LavaLamp } from "@/components/LavaLamp";
 import { Colors } from "@/constants/Colors";
 import { RootState } from "@/redux/store";
 import { Ionicons } from "@expo/vector-icons"; // For navigation icons

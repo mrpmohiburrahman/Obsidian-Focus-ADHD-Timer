@@ -1,28 +1,22 @@
 // RootLayout.tsx
 
-import React, { useEffect } from "react";
-import { Provider } from "react-redux";
-import { PersistGate } from "redux-persist/integration/react";
 import { useFonts } from "expo-font";
 import { Drawer } from "expo-router/drawer";
 import * as SplashScreen from "expo-splash-screen";
+import React, { useEffect } from "react";
 import "react-native-reanimated";
+import { Provider } from "react-redux";
+import { PersistGate } from "redux-persist/integration/react";
 
 import { useColorScheme } from "@/hooks/useColorScheme";
-import {
-  DarkTheme,
-  DefaultTheme,
-  ThemeProvider,
-} from "@react-navigation/native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 import { Colors } from "@/constants/Colors";
 import { persistor, store } from "../redux/store";
 
-import DrawerToggle from "@/components/DrawerToggle"; // Import the DrawerToggle component
 import CustomDrawerContent from "@/components/CustomDrawerContent"; // Import the CustomDrawerContent component
+import DrawerToggle from "@/components/DrawerToggle"; // Import the DrawerToggle component
 import { StyleSheet } from "react-native";
-import { moderateScale } from "react-native-size-matters";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
