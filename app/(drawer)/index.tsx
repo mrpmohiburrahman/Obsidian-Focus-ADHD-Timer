@@ -34,6 +34,9 @@ const colors: string[] = Colors.colorArray;
 const firstUnfilledColor = Colors.firstUnfilledColor; // Slightly lighter than the background
 
 const Index: React.FC<IndexProps> = () => {
+  const { usePlainBackground } = useSelector(
+    (state: RootState) => state.settings
+  );
   const {
     fixedTime,
     setFixedTime,
@@ -94,13 +97,15 @@ const Index: React.FC<IndexProps> = () => {
   };
   return (
     <SafeAreaView style={styles.container}>
-      <Image
-        style={styles.backgroundImage}
-        source={require("@/assets/images/yeoman.png")}
-        placeholder={{ blurhash }}
-        contentFit="cover"
-        transition={1000}
-      />
+      {!usePlainBackground && (
+        <Image
+          style={styles.backgroundImage}
+          source={require("@/assets/images/yeoman.png")}
+          placeholder={{ blurhash }}
+          contentFit="cover"
+          transition={1000}
+        />
+      )}
 
       <BlurView
         intensity={80}
@@ -116,7 +121,7 @@ const Index: React.FC<IndexProps> = () => {
             <Text style={styles.statusText}>Rank: {rank}</Text>
             <Text style={styles.statusText}>XP: {xp}</Text>
           </View>
-      <Button title="Complete Session" onPress={handleSessionComplete} />
+          <Button title="Complete Session" onPress={handleSessionComplete} />
         </View>
       </BlurView>
 
@@ -143,29 +148,31 @@ const Index: React.FC<IndexProps> = () => {
         />
       </View>
 
-      {/* Gradient Shadows */}
-      {/* Top Shadow */}
-      <LinearGradient
-        colors={["transparent", "rgba(0,0,0,0.3)"]}
-        style={styles.topShadow}
-        pointerEvents="none"
-        start={{ x: 0.5, y: 1 }}
-        end={{ x: 0.5, y: 0 }}
-      />
+      {/* Top and bottom shadow */}
+      {!usePlainBackground && (
+        <>
+          <LinearGradient
+            colors={["transparent", "rgba(0,0,0,0.3)"]}
+            style={styles.topShadow}
+            pointerEvents="none"
+            start={{ x: 0.5, y: 1 }}
+            end={{ x: 0.5, y: 0 }}
+          />
 
-      {/* Bottom Shadow */}
-      <LinearGradient
-        colors={[
-          "rgba(0,0,0,0.7)",
-          "rgba(0,0,0,0.5)",
-          "rgba(0,0,0,0.3)",
-          "transparent",
-        ]}
-        style={styles.bottomShadow}
-        pointerEvents="none"
-        start={{ x: 0.5, y: 1 }}
-        end={{ x: 0.5, y: 0 }}
-      />
+          <LinearGradient
+            colors={[
+              "rgba(0,0,0,0.7)",
+              "rgba(0,0,0,0.5)",
+              "rgba(0,0,0,0.3)",
+              "transparent",
+            ]}
+            style={styles.bottomShadow}
+            pointerEvents="none"
+            start={{ x: 0.5, y: 1 }}
+            end={{ x: 0.5, y: 0 }}
+          />
+        </>
+      )}
     </SafeAreaView>
   );
 };
@@ -173,7 +180,7 @@ const Index: React.FC<IndexProps> = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    // backgroundColor: Colors.background, // Dark background
+    backgroundColor: Colors.background, // Dark background
     padding: moderateScale(20),
     justifyContent: "space-between",
   },

@@ -14,14 +14,18 @@ import { RootState } from "@/redux/store";
 import {
   toggleNotification,
   toggleStopwatch,
+  togglePlainBackground,
 } from "@/redux/slices/settingsSlice";
 
 const Settings = () => {
   const dispatch = useDispatch();
 
-  const { notificationsEnabled, continueAsStopwatch } = useSelector(
-    (state: RootState) => state.settings
-  );
+  const {
+    notificationsEnabled,
+    continueAsStopwatch,
+    usePlainBackground,
+  } = useSelector((state: RootState) => state.settings);
+
   const settingsData = [
     {
       id: "1",
@@ -35,7 +39,14 @@ const Settings = () => {
       value: continueAsStopwatch,
       action: toggleStopwatch,
     },
+    {
+      id: "3",
+      title: "Use Plain Background Color",
+      value: usePlainBackground,
+      action: togglePlainBackground,
+    },
   ];
+
   const renderItem = ({ item }: { item: any }) => {
     return (
       <View style={styles.option}>
