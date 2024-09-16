@@ -1,14 +1,7 @@
 // Index.tsx
 
 import React, { useEffect, useRef } from "react";
-import {
-  SafeAreaView,
-  StyleSheet,
-  Text,
-  View,
-  Dimensions,
-  Button,
-} from "react-native";
+import { SafeAreaView, StyleSheet, View, Dimensions } from "react-native";
 import { moderateScale } from "react-native-size-matters";
 import { BlurView } from "expo-blur";
 import { Image } from "expo-image";
@@ -17,6 +10,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import TimerControls from "@/components/TimerControls";
 import TimerDisplay from "@/components/TimerDisplay";
 import TimerInput from "@/components/TimerInput";
+import Header from "@/components/Header";
 import { Colors } from "@/constants/Colors";
 import { useTimer } from "@/hooks/useTimer";
 import { addSession } from "@/redux/slices/xpSlice";
@@ -27,12 +21,10 @@ import { rankBackgrounds } from "@/constants/rankBackgrounds";
 
 const { width: WINDOW_WIDTH, height: WINDOW_HEIGHT } = Dimensions.get("window");
 
-type IndexProps = {};
-
 const colors: string[] = Colors.colorArray;
-const firstUnfilledColor = Colors.firstUnfilledColor; // Slightly lighter than the background
+const firstUnfilledColor = Colors.firstUnfilledColor;
 
-const Index: React.FC<IndexProps> = () => {
+const Index: React.FC = () => {
   const { usePlainBackground } = useSelector(
     (state: RootState) => state.settings
   );
@@ -49,58 +41,40 @@ const Index: React.FC<IndexProps> = () => {
     isAnimated,
   } = useTimer();
 
-  // Calculate current and previous colors
   const currentColor: string = colors[lapCount % colors.length];
   const previousColor: string =
     lapCount === 0
       ? firstUnfilledColor
       : colors[(lapCount - 1) % colors.length];
-
-  // Calculate progress for the current interval
   const progress = fixedTime === 0 ? 0 : (elapsedTime % fixedTime) / fixedTime;
 
-  // Get XP and Rank from Redux store
   const xp = useSelector((state: RootState) => state.xp.xp);
   const rank = useSelector((state: RootState) => state.xp.rank);
 
-  // Get background image based on rank
   const backgroundImageSource =
     rankBackgrounds[rank] || rankBackgrounds["Peasant"];
-
-  // Get blurhash based on rank
   const backgroundBlurhash = rankBlurhashes[rank] || defaultBlurhash;
 
-  // Reference to keep track of previous lap count
   const previousLapCountRef = useRef<number>(lapCount);
-
-  // Dispatch to send actions to the store
   const dispatch = useDispatch();
 
-  // UseEffect to update XP and Rank when a new lap is completed
   useEffect(() => {
     if (lapCount > previousLapCountRef.current) {
-      // A new lap has been completed
-      const lastLapDuration = fixedTime; // Duration of the completed session
-
-      // Dispatch addSession action with the session length
+      const lastLapDuration = fixedTime;
       dispatch(addSession({ sessionLength: lastLapDuration }));
-
-      // Update the previous lap count
       previousLapCountRef.current = lapCount;
     }
   }, [lapCount]);
 
-  // Handle reset to reset previous lap count reference
   const handleReset = () => {
     reset();
     previousLapCountRef.current = 0;
   };
 
   const handleSessionComplete = () => {
-    console.log("🚀 ~ handleSessionComplete ~ handleSessionComplete: pressed");
-    const sessionLengthInSeconds = 1500; // Example: 25 minutes
-    dispatch(addSession({ sessionLength: sessionLengthInSeconds }));
+    dispatch(addSession({ sessionLength: 1500 })); // Example: 25 minutes
   };
+
   return (
     <SafeAreaView style={styles.container}>
       {!usePlainBackground && (
@@ -113,24 +87,8 @@ const Index: React.FC<IndexProps> = () => {
         />
       )}
 
-      <BlurView
-        intensity={80}
-        tint="systemUltraThinMaterialDark"
-        style={styles.blurView}
-      >
-        {/* Header */}
-        <View style={styles.header}>
-          <Text style={styles.title}>Focus Quest</Text>
-          {/* XP and Rank Display */}
-          <View style={styles.statusContainer}>
-            <Text style={styles.statusText}>Rank: {rank}</Text>
-            <Text style={styles.statusText}>XP: {xp}</Text>
-          </View>
-          <Button title="Complete Session" onPress={handleSessionComplete} />
-        </View>
-      </BlurView>
+      <Header rank={rank} xp={xp} onCompleteSession={handleSessionComplete} />
 
-      {/* Content */}
       <View style={styles.content}>
         <TimerDisplay
           progress={progress}
@@ -142,17 +100,15 @@ const Index: React.FC<IndexProps> = () => {
         <TimerInput fixedTime={fixedTime} setFixedTime={setFixedTime} />
       </View>
 
-      {/* Footer */}
       <View style={styles.footer}>
         <TimerControls
           isRunning={isRunning}
           onStart={start}
           onPause={pause}
-          onReset={handleReset} // Use handleReset to reset lap count
+          onReset={handleReset}
         />
       </View>
 
-      {/* Top and bottom shadow */}
       {!usePlainBackground && (
         <>
           <LinearGradient
@@ -162,7 +118,6 @@ const Index: React.FC<IndexProps> = () => {
             start={{ x: 0.5, y: 1 }}
             end={{ x: 0.5, y: 0 }}
           />
-
           <LinearGradient
             colors={[
               "rgba(0,0,0,0.7)",
@@ -184,7 +139,7 @@ const Index: React.FC<IndexProps> = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.background, // Dark background
+    backgroundColor: Colors.background,
     padding: moderateScale(20),
     justifyContent: "space-between",
   },
@@ -198,31 +153,6 @@ const styles = StyleSheet.create({
     height: WINDOW_HEIGHT,
     width: "100%",
     backgroundColor: "#0553",
-  },
-  blurView: {
-    justifyContent: "center",
-    overflow: "hidden",
-    borderRadius: 20,
-    marginTop: moderateScale(20),
-    marginHorizontal: moderateScale(40),
-    paddingVertical: moderateScale(20),
-  },
-  header: {
-    alignItems: "center",
-  },
-  title: {
-    fontSize: moderateScale(24),
-    color: "#FFFFFF", // White text
-    fontWeight: "bold",
-  },
-  statusContainer: {
-    marginTop: moderateScale(10),
-    alignItems: "center",
-  },
-  statusText: {
-    fontSize: moderateScale(16),
-    color: "#FFFFFF",
-    fontWeight: "500",
   },
   content: {
     flex: 1,
