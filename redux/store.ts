@@ -3,6 +3,7 @@
 import { configureStore, combineReducers } from "@reduxjs/toolkit";
 import timerReducer from "./slices/timerSlice";
 import xpReducer from "./slices/xpSlice";
+import settingsReducer from "./slices/settingsSlice";
 import {
   persistStore,
   persistReducer,
@@ -19,7 +20,7 @@ import mmkvStorage from "./mmkvStorage";
 const rootReducer = combineReducers({
   timer: timerReducer,
   xp: xpReducer,
-
+  settings: settingsReducer,
   // Add other reducers here if needed
 });
 
@@ -27,7 +28,7 @@ const rootReducer = combineReducers({
 const persistConfig = {
   key: "root",
   storage: mmkvStorage, // Use the custom MMKV storage adapter
-  whitelist: ["timer", "xp"], // Specify which slices to persist
+  whitelist: ["timer", "xp","settings"], // Specify which slices to persist
 };
 
 // Create a persisted reducer

@@ -22,7 +22,6 @@ import { StyleSheet } from "react-native";
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
-  const colorScheme = useColorScheme();
   const [loaded] = useFonts({
     SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
   });
@@ -65,6 +64,7 @@ export default function RootLayout() {
             })}
             drawerContent={(props) => <CustomDrawerContent {...props} />} // Use custom Drawer content
           >
+            {/* Settings Screen */}
             {/* Timer Screen */}
             <Drawer.Screen
               name="(drawer)/index"
@@ -88,14 +88,16 @@ export default function RootLayout() {
                 headerTransparent: false, // Make header opaque to apply background color
               }}
             />
-
-            {/* Settings Screen */}
             <Drawer.Screen
               name="(drawer)/settings"
               options={{
                 drawerLabel: "Settings",
                 title: "Settings",
-                // Inherit default header options
+                headerStyle: {
+                  backgroundColor: Colors.background, // Custom background color for History header
+                },
+                headerTintColor: "#FFFFFF", // Custom text/icon color for History header
+                headerTransparent: false, // Make header opaque to apply background color
               }}
             />
           </Drawer>

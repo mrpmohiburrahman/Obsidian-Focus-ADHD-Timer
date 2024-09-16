@@ -5,6 +5,7 @@
  */
 
 export const Colors = {
+  text: "#ECEDEE",
   primary: "#B98FFE", // Original primary color
   secondary: "#6F41A5", // Darker version of primary color, previously drawerActiveBackgroundColor
   background: "#212327", // App background color
