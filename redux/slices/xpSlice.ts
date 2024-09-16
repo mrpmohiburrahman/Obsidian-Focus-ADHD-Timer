@@ -30,6 +30,22 @@ const initialState: XpState = {
   consecutiveDays: 0,
   sessions: [], // Initialize as empty array
 };
+// Define the available rank types
+export type Rank =
+  | "Peasant"
+  | "Serf"
+  | "Freeman"
+  | "Yeoman"
+  | "Squire"
+  | "Knight"
+  | "Baron"
+  | "Viscount"
+  | "Earl"
+  | "Marquis"
+  | "Duke"
+  | "Prince"
+  | "King"
+  | "Emperor";
 
 const xpThresholds: { [key: number]: string } = {
   0: "Peasant",
@@ -307,6 +323,10 @@ const xpSlice = createSlice({
     resetConsecutiveDays: (state) => {
       state.consecutiveDays = 0;
     },
+    setRankManually: (state, action: PayloadAction<{ rank: Rank }>) => {
+      const { rank } = action.payload;
+      state.rank = rank;
+    },
     // Add the resetState reducer
     resetXpState: () => initialState,
   },
@@ -319,6 +339,7 @@ export const {
   resetConsecutiveSessions,
   resetConsecutiveDays,
   resetXpState,
+  setRankManually, // Export the new action
 } = xpSlice.actions;
 
 // Export reducer

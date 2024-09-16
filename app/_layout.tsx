@@ -81,11 +81,11 @@ export default function RootLayout() {
               options={{
                 drawerLabel: "History",
                 title: "History",
-                headerStyle: {
-                  backgroundColor: Colors.background, // Custom background color for History header
-                },
+                // headerStyle: {
+                //   backgroundColor: Colors.background, // Custom background color for History header
+                // },
                 headerTintColor: "#FFFFFF", // Custom text/icon color for History header
-                headerTransparent: false, // Make header opaque to apply background color
+                // headerTransparent: false, // Make header opaque to apply background color
               }}
             />
             <Drawer.Screen
@@ -93,11 +93,11 @@ export default function RootLayout() {
               options={{
                 drawerLabel: "Settings",
                 title: "Settings",
-                headerStyle: {
-                  backgroundColor: Colors.background, // Custom background color for History header
-                },
+                // headerStyle: {
+                //   backgroundColor: Colors.background, // Custom background color for History header
+                // },
                 headerTintColor: "#FFFFFF", // Custom text/icon color for History header
-                headerTransparent: false, // Make header opaque to apply background color
+                // headerTransparent: false, // Make header opaque to apply background color
               }}
             />
           </Drawer>

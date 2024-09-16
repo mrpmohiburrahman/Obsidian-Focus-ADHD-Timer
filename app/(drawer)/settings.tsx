@@ -1,30 +1,33 @@
 import React from "react";
 import {
-  SafeAreaView,
-  View,
-  Text,
-  Switch,
-  StyleSheet,
+  Dimensions,
   FlatList,
+  SafeAreaView,
+  StyleSheet,
+  Switch,
+  Text,
+  View,
 } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 
 import { Colors } from "@/constants/Colors";
-import { RootState } from "@/redux/store";
+import { plainBackground } from "@/constants/rankBackgrounds";
 import {
   toggleNotification,
-  toggleStopwatch,
   togglePlainBackground,
+  toggleStopwatch,
 } from "@/redux/slices/settingsSlice";
+import { RootState } from "@/redux/store";
+import { getBackgrundAndHashs } from "@/utils/getBackgrundAndHashs";
+import { Image } from "expo-image";
+import { moderateScale } from "react-native-size-matters";
 
+const { width: WINDOW_WIDTH, height: WINDOW_HEIGHT } = Dimensions.get("window");
 const Settings = () => {
   const dispatch = useDispatch();
 
-  const {
-    notificationsEnabled,
-    continueAsStopwatch,
-    usePlainBackground,
-  } = useSelector((state: RootState) => state.settings);
+  const { notificationsEnabled, continueAsStopwatch, usePlainBackground } =
+    useSelector((state: RootState) => state.settings);
 
   const settingsData = [
     {
@@ -62,15 +65,31 @@ const Settings = () => {
     );
   };
 
+  const { backgroundImageSource } = getBackgrundAndHashs({ isGeneral: true });
+
+  const backgroundImage = usePlainBackground
+    ? plainBackground 
+    : backgroundImageSource; 
+
+  // useEffect(() => {
+  //   dispatch(setRankManually({ rank: "Peasant" }));
+  // }, []);
   return (
     <SafeAreaView style={styles.container}>
+      <Image
+        style={styles.backgroundImage}
+        source={backgroundImage}
+        contentFit="cover"
+        transition={100}
+      />
+
       <FlatList
         data={settingsData}
         keyExtractor={(item) => item.id}
         renderItem={renderItem}
         contentContainerStyle={{
           paddingHorizontal: 20,
-          paddingTop: 20,
+          paddingTop: moderateScale(60),
         }}
       />
     </SafeAreaView>
@@ -82,6 +101,15 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: Colors.background,
     padding: 16,
+  },
+  backgroundImage: {
+    position: "absolute",
+    left: 0,
+    right: 0,
+    top: 0,
+    bottom: 0,
+    width: "100%",
+    height: WINDOW_HEIGHT,
   },
   option: {
     flexDirection: "row",

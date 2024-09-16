@@ -17,8 +17,9 @@ import { addSession } from "@/redux/slices/xpSlice";
 import { RootState } from "@/redux/store";
 import { useDispatch, useSelector } from "react-redux";
 import { defaultBlurhash, rankBlurhashes } from "@/constants/rankBlurhashes";
-import { rankBackgrounds } from "@/constants/rankBackgrounds";
+import { plainBackground, rankBackgrounds } from "@/constants/rankBackgrounds";
 import BackgroundShadows from "@/components/BackgroundShadows";
+import { getBackgrundAndHashs } from "@/utils/getBackgrundAndHashs";
 
 const { width: WINDOW_WIDTH, height: WINDOW_HEIGHT } = Dimensions.get("window");
 
@@ -26,9 +27,6 @@ const colors: string[] = Colors.colorArray;
 const firstUnfilledColor = Colors.firstUnfilledColor;
 
 const Index: React.FC = () => {
-  const { usePlainBackground } = useSelector(
-    (state: RootState) => state.settings
-  );
   const {
     fixedTime,
     setFixedTime,
@@ -52,9 +50,11 @@ const Index: React.FC = () => {
   const xp = useSelector((state: RootState) => state.xp.xp);
   const rank = useSelector((state: RootState) => state.xp.rank);
 
-  const backgroundImageSource =
-    rankBackgrounds[rank] || rankBackgrounds["Peasant"];
-  const backgroundBlurhash = rankBlurhashes[rank] || defaultBlurhash;
+  const { usePlainBackground } = useSelector(
+    (state: RootState) => state.settings
+  );
+
+  const { backgroundImageSource, backgroundBlurhash } = getBackgrundAndHashs();
 
   const previousLapCountRef = useRef<number>(lapCount);
   const dispatch = useDispatch();

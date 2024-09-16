@@ -1,23 +1,41 @@
 // components/CustomDrawerContent.tsx
 
-import React from "react";
-import { StyleSheet, View, ImageBackground } from "react-native";
+import { Colors } from "@/constants/Colors";
+import { defaultBlurhash } from "@/constants/rankBlurhashes";
+import { RootState } from "@/redux/store";
+import { getBackgrundAndHashs } from "@/utils/getBackgrundAndHashs";
 import {
   DrawerContentScrollView,
   DrawerItemList,
 } from "@react-navigation/drawer";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { BlurView } from "expo-blur"; // Import BlurView
-
+import { Image } from "expo-image";
+import React from "react";
+import { Dimensions, StyleSheet, View } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { useSelector } from "react-redux";
+const { width: WINDOW_WIDTH, height: WINDOW_HEIGHT } = Dimensions.get("window");
 const CustomDrawerContent = (props) => {
   const inset = useSafeAreaInsets();
 
+  const { usePlainBackground } = useSelector(
+    (state: RootState) => state.settings
+  );
+
+  const { backgroundBlurhash } = getBackgrundAndHashs();
+  const backgroundBlur = usePlainBackground
+    ? defaultBlurhash
+    : backgroundBlurhash;
+
   return (
-    <ImageBackground
-      source={require("@/assets/images/drawerbg.png")} // Replace with the path to your background image
-      style={styles.backgroundImage}
-      resizeMode="cover"
-    >
+    <View style={{ flex: 1, backgroundColor: Colors.background }}>
+      <Image
+        style={styles.backgroundImage}
+        placeholder={{ blurhash: backgroundBlur }}
+        contentFit="cover"
+        transition={1000}
+      />
+
       <BlurView intensity={50} style={styles.blurContainer}>
         {/* Optional: Add a header or avatar */}
         {/* <View style={styles.header}>
@@ -36,13 +54,21 @@ const CustomDrawerContent = (props) => {
           <DrawerItemList {...props} />
         </DrawerContentScrollView>
       </BlurView>
-    </ImageBackground>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   backgroundImage: {
     flex: 1,
+    position: "absolute",
+    left: 0,
+    right: 0,
+    top: 0,
+    bottom: 0,
+    height: WINDOW_HEIGHT,
+    width: "100%",
+    backgroundColor: "#0553",
   },
   blurContainer: {
     flex: 1,

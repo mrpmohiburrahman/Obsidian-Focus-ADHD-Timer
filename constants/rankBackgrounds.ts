@@ -15,3 +15,5 @@ export const rankBackgrounds: { [key: string]: any } = {
   King: require("@/assets/images/king.png"),
   Emperor: require("@/assets/images/emperor.png"),
 };
+
+export const plainBackground = require("@/assets/generalBackgrounds/plain-bg.png");

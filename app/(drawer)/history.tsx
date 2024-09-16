@@ -1,25 +1,28 @@
-// screens/HistoryScreen.tsx
-
-import { Colors } from "@/constants/Colors";
-import { RootState } from "@/redux/store";
-import { Ionicons } from "@expo/vector-icons"; // For navigation icons
-import moment from "moment";
 import React, { useMemo, useState } from "react";
 import {
-  Dimensions,
+  View,
   FlatList,
   StyleSheet,
   Text,
   TouchableOpacity,
-  View,
+  Dimensions,
 } from "react-native";
-import { LineChart } from "react-native-chart-kit";
-import { Card } from "react-native-paper";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { moderateScale } from "react-native-size-matters";
 import { useSelector } from "react-redux";
+import { Card } from "react-native-paper";
+import { LineChart } from "react-native-chart-kit";
+import { Ionicons } from "@expo/vector-icons"; // For navigation icons
+import { Image } from "expo-image";
+import moment from "moment";
+import { moderateScale } from "react-native-size-matters";
+import { Colors } from "@/constants/Colors";
+import { plainBackground, rankBackgrounds } from "@/constants/rankBackgrounds";
+import { RootState } from "@/redux/store";
+import { defaultBlurhash, rankBlurhashes } from "@/constants/rankBlurhashes";
+import BackgroundShadows from "@/components/BackgroundShadows";
+import { generalBackgrounds } from "@/constants/generalBackgrounds";
+import { getBackgrundAndHashs } from "@/utils/getBackgrundAndHashs";
 
-const screenWidth = Dimensions.get("window").width;
+const { width: WINDOW_WIDTH, height: WINDOW_HEIGHT } = Dimensions.get("window");
 
 interface WeekData {
   startOfWeek: string; // YYYY-MM-DD
@@ -40,9 +43,7 @@ const HistoryScreen: React.FC = () => {
 
   // Calculate the end and start dates of the selected week
   const currentWeek: WeekData = useMemo(() => {
-    // End of the week is today minus weekIndex weeks
     const endOfWeek = moment().subtract(weekIndex, "weeks").endOf("day");
-    // Start of the week is 6 days before the end of the week
     const startOfWeek = moment(endOfWeek).subtract(6, "days").startOf("day");
     return {
       startOfWeek: startOfWeek.format("YYYY-MM-DD"),
@@ -65,14 +66,12 @@ const HistoryScreen: React.FC = () => {
   // Group sessions by date within the selected week
   const sessionsByDate = useMemo(() => {
     const grouped: { [key: string]: number[] } = {};
-
     sessionsInWeek.forEach((session) => {
       if (!grouped[session.date]) {
         grouped[session.date] = [];
       }
       grouped[session.date].push(session.duration);
     });
-
     return grouped;
   }, [sessionsInWeek]);
 
@@ -133,16 +132,10 @@ const HistoryScreen: React.FC = () => {
   // Disable Next Week button if viewing the current week
   const isCurrentWeek = weekIndex === 0;
 
-  // Render ListHeaderComponent
   const renderHeader = () => (
     <>
-      {/* Header with Week Navigation */}
       <View style={styles.headerContainer}>
-        <TouchableOpacity
-          onPress={handlePreviousWeek}
-          style={styles.navButton}
-          accessibilityLabel="Previous Week"
-        >
+        <TouchableOpacity onPress={handlePreviousWeek} style={styles.navButton}>
           <Ionicons name="chevron-back" size={24} color="#FFFFFF" />
         </TouchableOpacity>
 
@@ -155,7 +148,6 @@ const HistoryScreen: React.FC = () => {
           onPress={handleNextWeek}
           style={styles.navButton}
           disabled={isCurrentWeek}
-          accessibilityLabel="Next Week"
         >
           <Ionicons
             name="chevron-forward"
@@ -165,51 +157,35 @@ const HistoryScreen: React.FC = () => {
         </TouchableOpacity>
       </View>
 
-      {/* Chart Section */}
       <Card style={styles.chartCard}>
         <Card.Content>
           <View style={styles.chartContainer}>
             <LineChart
               data={chartData}
-              width={screenWidth - 60} // Adjusted for padding and navigation buttons
+              width={WINDOW_WIDTH - 60} // Adjusted for padding and navigation buttons
               height={220}
               yAxisSuffix="m"
-              yAxisInterval={1} // optional, defaults to 1
               chartConfig={{
                 backgroundColor: Colors.secondary,
                 backgroundGradientFrom: Colors.secondary,
                 backgroundGradientTo: Colors.primary,
-                decimalPlaces: 0, // optional, defaults to 2dp
                 color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
                 labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-                style: {
-                  borderRadius: 16,
-                },
-                propsForDots: {
-                  r: "4",
-                  strokeWidth: "2",
-                  stroke: "#ffa726",
-                },
+                style: { borderRadius: 16 },
               }}
               bezier
               style={styles.lineChart}
-              withInnerLines={false}
-              withOuterLines={false}
-              verticalLabelRotation={-45}
             />
           </View>
         </Card.Content>
       </Card>
 
-      {/* Summary Header */}
       <Text style={styles.subHeader}>Weekly Summary</Text>
     </>
   );
 
-  // Render ListFooterComponent for additional spacing
   const renderFooter = () => <View style={styles.footerSpacing} />;
 
-  // Render Item for FlatList
   const renderItem = ({ item }: { item: ListItem }) => (
     <Card style={styles.listCard}>
       <Card.Content>
@@ -230,27 +206,62 @@ const HistoryScreen: React.FC = () => {
     <Text style={styles.noDataText}>No sessions recorded for this week.</Text>
   );
 
+  const { usePlainBackground } = useSelector(
+    (state: RootState) => state.settings
+  );
+
+  const { backgroundImageSource } = getBackgrundAndHashs({ isGeneral: true });
+  const backgroundImage = usePlainBackground
+    ? plainBackground
+    : backgroundImageSource;
+
   return (
-    <FlatList
-      data={listData}
-      keyExtractor={(item) => item.date}
-      renderItem={renderItem}
-      ListHeaderComponent={renderHeader}
-      ListFooterComponent={renderFooter}
-      ListEmptyComponent={renderEmptyComponent}
-      contentContainerStyle={styles.contentContainer}
-      showsVerticalScrollIndicator={false}
-      style={{ backgroundColor: Colors.background }}
-    />
+    <View style={styles.container}>
+      {/* Background Image */}
+
+      <Image
+        style={styles.backgroundImage}
+        source={backgroundImage}
+        placeholder={{ blurhash: defaultBlurhash }}
+        contentFit="cover"
+        transition={1000}
+      />
+
+      {/* FlatList content over the background image */}
+      <FlatList
+        data={listData}
+        keyExtractor={(item) => item.date}
+        renderItem={renderItem}
+        ListHeaderComponent={renderHeader}
+        ListFooterComponent={renderFooter}
+        ListEmptyComponent={renderEmptyComponent}
+        contentContainerStyle={styles.contentContainer}
+        showsVerticalScrollIndicator={false}
+      />
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    position: "relative",
+    backgroundColor: Colors.background,
+  },
+  backgroundImage: {
+    position: "absolute",
+    left: 0,
+    right: 0,
+    top: 0,
+    bottom: 0,
+    width: "100%",
+    height: WINDOW_HEIGHT,
+  },
   headerContainer: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    marginBottom: moderateScale(20), // Added margin for better spacing
+    marginBottom: moderateScale(20),
   },
   navButton: {
     padding: moderateScale(10),
@@ -267,13 +278,15 @@ const styles = StyleSheet.create({
   },
   chartContainer: {
     alignItems: "center",
-    justifyContent: "center",
   },
   lineChart: {
     borderRadius: 16,
   },
-  listContainer: {
-    flex: 1,
+  subHeader: {
+    fontSize: moderateScale(20),
+    fontWeight: "600",
+    color: "#FFFFFF",
+    marginBottom: moderateScale(10),
   },
   listCard: {
     backgroundColor: "rgba(255, 255, 255, 0.1)",
@@ -297,14 +310,8 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: "#FFFFFF",
   },
-  subHeader: {
-    fontSize: moderateScale(20),
-    fontWeight: "600",
-    color: "#FFFFFF",
-    marginBottom: moderateScale(10),
-  },
   footerSpacing: {
-    height: moderateScale(30), // Adjust as needed
+    height: moderateScale(30),
   },
   noDataText: {
     fontSize: moderateScale(16),
@@ -313,8 +320,8 @@ const styles = StyleSheet.create({
     marginTop: moderateScale(20),
   },
   contentContainer: {
-    backgroundColor: Colors.background,
-    paddingBottom: moderateScale(100), // Additional spacing at the bottom
+    paddingTop: moderateScale(100),
+    paddingBottom: moderateScale(100),
     paddingHorizontal: moderateScale(20),
   },
 });
