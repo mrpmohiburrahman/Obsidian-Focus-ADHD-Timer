@@ -72,7 +72,22 @@ const xpSlice = createSlice({
       const { sessionLength } = action.payload; // sessionLength in seconds
       const sessionMinutes = sessionLength / 60;
 
-      // Base XP per minute
+      // Update total focused time and session count
+      state.totalFocusedTime += sessionLength;
+      state.sessionCount += 1;
+
+      // If session is less than or equal to 5 minutes, just return after updating the time
+      if (sessionMinutes <= 5) {
+        const newSession: Session = {
+          id: Date.now().toString(),
+          date: getToday(),
+          duration: sessionLength,
+        };
+        state.sessions.push(newSession);
+        return;
+      }
+
+      // Base XP per minute for sessions longer than 5 minutes
       const baseXp = Math.floor(sessionMinutes * 1); // 1 XP per minute
 
       // Session Completion Bonus
@@ -88,9 +103,6 @@ const xpSlice = createSlice({
       } else if (state.consecutiveSessions >= 4) {
         streakBonus = 6;
       }
-
-      // Update total focused time
-      state.totalFocusedTime += sessionLength;
 
       // Milestone Bonuses for total focused time
       let milestoneBonus = 0;
@@ -152,7 +164,7 @@ const xpSlice = createSlice({
 
       state.lastSessionDate = today;
 
-      // Total XP calculation
+      // Total XP calculation for sessions longer than 5 minutes
       const totalXpGained =
         baseXp +
         completionBonus +
@@ -163,11 +175,10 @@ const xpSlice = createSlice({
         consecutiveDayBonus;
 
       state.xp += totalXpGained;
-      state.sessionCount += 1;
 
       // Add the session to the sessions array
       const newSession: Session = {
-        id: Date.now().toString(), // Simple unique ID based on timestamp
+        id: Date.now().toString(),
         date: today,
         duration: sessionLength,
       };
@@ -177,7 +188,6 @@ const xpSlice = createSlice({
       const newRank = determineRank(state.xp);
       state.rank = newRank;
     },
-
     // New reducer to add a session with a specific date
     addSessionWithDate: (
       state,

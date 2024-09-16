@@ -38,7 +38,12 @@ const TimerInput: React.FC<TimerInputProps> = ({ fixedTime, setFixedTime }) => {
   }, [fixedTime]);
 
   const handleConfirm = () => {
-    const totalSeconds = hours * 3600 + minutes * 60 + seconds;
+    // Ensure that hours, minutes, and seconds are numbers
+    const totalSeconds =
+      parseInt(hours.toString()) * 3600 +
+      parseInt(minutes.toString()) * 60 +
+      parseInt(seconds.toString());
+
     if (totalSeconds > 0) {
       setFixedTime(totalSeconds);
       setModalVisible(false);
@@ -65,7 +70,6 @@ const TimerInput: React.FC<TimerInputProps> = ({ fixedTime, setFixedTime }) => {
           style={{
             flexDirection: "row",
             alignItems: "center",
-            // backgroundColor: "#1E1E1E",
             paddingVertical: 10,
             paddingHorizontal: 15,
             borderRadius: 5,
@@ -103,7 +107,9 @@ const TimerInput: React.FC<TimerInputProps> = ({ fixedTime, setFixedTime }) => {
                 <Picker
                   selectedValue={hours}
                   style={styles.picker}
-                  onValueChange={(itemValue) => setHours(itemValue)}
+                  onValueChange={(itemValue) =>
+                    setHours(parseInt(itemValue.toString()))
+                  }
                   mode="dropdown"
                   itemStyle={
                     Platform.OS === "ios" ? styles.pickerItem : undefined
@@ -122,7 +128,9 @@ const TimerInput: React.FC<TimerInputProps> = ({ fixedTime, setFixedTime }) => {
                 <Picker
                   selectedValue={minutes}
                   style={styles.picker}
-                  onValueChange={(itemValue) => setMinutes(itemValue)}
+                  onValueChange={(itemValue) =>
+                    setMinutes(parseInt(itemValue.toString()))
+                  }
                   mode="dropdown"
                   itemStyle={
                     Platform.OS === "ios" ? styles.pickerItem : undefined
@@ -141,7 +149,9 @@ const TimerInput: React.FC<TimerInputProps> = ({ fixedTime, setFixedTime }) => {
                 <Picker
                   selectedValue={seconds}
                   style={styles.picker}
-                  onValueChange={(itemValue) => setSeconds(itemValue)}
+                  onValueChange={(itemValue) =>
+                    setSeconds(parseInt(itemValue.toString()))
+                  }
                   mode="dropdown"
                   itemStyle={
                     Platform.OS === "ios" ? styles.pickerItem : undefined
@@ -192,7 +202,6 @@ const styles = StyleSheet.create({
   iconButton: {
     flexDirection: "row",
     alignItems: "center",
-    // backgroundColor: "#1E1E1E",
     paddingVertical: 10,
     paddingHorizontal: 15,
     borderRadius: 5,
