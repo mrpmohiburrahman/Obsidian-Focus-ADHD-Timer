@@ -22,6 +22,7 @@ import { useTimer } from "@/hooks/useTimer";
 import { addSession } from "@/redux/slices/xpSlice";
 import { RootState } from "@/redux/store";
 import { useDispatch, useSelector } from "react-redux";
+import { rankBackgrounds } from "@/constants/rankBackgrounds";
 
 const { width: WINDOW_WIDTH, height: WINDOW_HEIGHT } = Dimensions.get("window");
 
@@ -64,6 +65,10 @@ const Index: React.FC<IndexProps> = () => {
   const xp = useSelector((state: RootState) => state.xp.xp);
   const rank = useSelector((state: RootState) => state.xp.rank);
 
+  // Get background image based on rank
+  const backgroundImageSource =
+    rankBackgrounds[rank] || rankBackgrounds["Peasant"];
+
   // Reference to keep track of previous lap count
   const previousLapCountRef = useRef<number>(lapCount);
 
@@ -100,7 +105,7 @@ const Index: React.FC<IndexProps> = () => {
       {!usePlainBackground && (
         <Image
           style={styles.backgroundImage}
-          source={require("@/assets/images/yeoman.png")}
+          source={backgroundImageSource}
           placeholder={{ blurhash }}
           contentFit="cover"
           transition={1000}
@@ -109,7 +114,6 @@ const Index: React.FC<IndexProps> = () => {
 
       <BlurView
         intensity={80}
-        // tint="systemUltraThinMaterialLight"
         tint="systemUltraThinMaterialDark"
         style={styles.blurView}
       >
@@ -134,7 +138,6 @@ const Index: React.FC<IndexProps> = () => {
           elapsedTime={elapsedTime}
           isAnimated={isAnimated}
         />
-
         <TimerInput fixedTime={fixedTime} setFixedTime={setFixedTime} />
       </View>
 
@@ -209,7 +212,6 @@ const styles = StyleSheet.create({
   title: {
     fontSize: moderateScale(24),
     color: "#FFFFFF", // White text
-    // color: Colors.light.text,
     fontWeight: "bold",
   },
   // Styles for XP and Rank display
@@ -228,7 +230,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   footer: {
-    marginBottom: moderateScale(20), // Adjusted to fit within shadows
+    marginBottom: moderateScale(20),
     zIndex: 2,
   },
   topShadow: {
@@ -236,8 +238,8 @@ const styles = StyleSheet.create({
     top: 0,
     left: 0,
     right: 0,
-    height: 200, // Increased height from 50 to 100
-    zIndex: 1, // Ensure shadow is above other components
+    height: 200,
+    zIndex: 1,
   },
   bottomShadow: {
     position: "absolute",
@@ -245,10 +247,7 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     height: 200,
-    // borderWidth: 1,
-    borderColor: "red",
-    // No need for backgroundColor or shadow properties as LinearGradient handles it
-    zIndex: 1, // Ensure shadow is above other components
+    zIndex: 1,
   },
 });
 
