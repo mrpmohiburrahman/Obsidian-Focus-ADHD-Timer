@@ -14,7 +14,7 @@ import {
   View,
 } from "react-native";
 import { LineChart } from "react-native-chart-kit";
-import { Card, Title } from "react-native-paper";
+import { Card } from "react-native-paper";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { moderateScale } from "react-native-size-matters";
 import { useSelector } from "react-redux";
@@ -38,12 +38,12 @@ const HistoryScreen: React.FC = () => {
   // State to track current week index (0 = current week, 1 = previous week, etc.)
   const [weekIndex, setWeekIndex] = useState<number>(0);
 
-  // Calculate the start and end dates of the selected week
+  // Calculate the end and start dates of the selected week
   const currentWeek: WeekData = useMemo(() => {
-    const startOfWeek = moment()
-      .subtract(weekIndex, "weeks")
-      .startOf("isoWeek");
-    const endOfWeek = moment(startOfWeek).endOf("isoWeek");
+    // End of the week is today minus weekIndex weeks
+    const endOfWeek = moment().subtract(weekIndex, "weeks").endOf("day");
+    // Start of the week is 6 days before the end of the week
+    const startOfWeek = moment(endOfWeek).subtract(6, "days").startOf("day");
     return {
       startOfWeek: startOfWeek.format("YYYY-MM-DD"),
       endOfWeek: endOfWeek.format("YYYY-MM-DD"),
@@ -76,7 +76,7 @@ const HistoryScreen: React.FC = () => {
     return grouped;
   }, [sessionsInWeek]);
 
-  // Get all dates within the selected week
+  // Get all dates within the selected week (from start to end)
   const datesInWeek = useMemo(() => {
     const days: string[] = [];
     for (let i = 0; i < 7; i++) {
@@ -250,7 +250,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    // marginBottom: moderateScale(20),
+    marginBottom: moderateScale(20), // Added margin for better spacing
   },
   navButton: {
     padding: moderateScale(10),
