@@ -72,10 +72,6 @@ const Index: React.FC = () => {
     previousLapCountRef.current = 0;
   };
 
-  const handleSessionComplete = () => {
-    dispatch(addSession({ sessionLength: 1500 })); // Example: 25 minutes
-  };
-
   return (
     <SafeAreaView style={styles.container}>
       {!usePlainBackground && (
@@ -88,7 +84,7 @@ const Index: React.FC = () => {
         />
       )}
 
-      <Header rank={rank} xp={xp} onCompleteSession={handleSessionComplete} />
+      <Header rank={rank} xp={xp} />
 
       <View style={styles.content}>
         <TimerDisplay

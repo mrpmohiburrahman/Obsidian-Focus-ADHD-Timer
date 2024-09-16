@@ -6,10 +6,9 @@ import { moderateScale } from "react-native-size-matters";
 interface HeaderProps {
   rank: string;
   xp: number;
-  onCompleteSession: () => void;
 }
 
-const Header: React.FC<HeaderProps> = ({ rank, xp, onCompleteSession }) => (
+const Header: React.FC<HeaderProps> = ({ rank, xp }) => (
   <BlurView
     intensity={80}
     tint="systemUltraThinMaterialDark"
@@ -21,7 +20,6 @@ const Header: React.FC<HeaderProps> = ({ rank, xp, onCompleteSession }) => (
         <Text style={styles.statusText}>Rank: {rank}</Text>
         <Text style={styles.statusText}>XP: {xp}</Text>
       </View>
-      <Button title="Complete Session" onPress={onCompleteSession} />
     </View>
   </BlurView>
 );
