@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  notificationsEnabled: false,
+  playSoundAfterFirstSession: false, // Updated state variable
   stopAfterFirstSession: false, // Renamed from continueAsStopwatch to stopAfterFirstSession
   usePlainBackground: false,
 };
@@ -10,8 +10,9 @@ const settingsSlice = createSlice({
   name: "settings",
   initialState,
   reducers: {
-    toggleNotification(state) {
-      state.notificationsEnabled = !state.notificationsEnabled;
+    togglePlaySoundAfterFirstSession(state) {
+      // Updated action
+      state.playSoundAfterFirstSession = !state.playSoundAfterFirstSession;
     },
     toggleStopAfterFirstSession(state) {
       // Updated action
@@ -24,8 +25,8 @@ const settingsSlice = createSlice({
 });
 
 export const {
-  toggleNotification,
-  toggleStopAfterFirstSession, // Export the updated action
+  toggleStopAfterFirstSession,
+  togglePlaySoundAfterFirstSession, // Export the updated action
   togglePlainBackground,
 } = settingsSlice.actions;
 

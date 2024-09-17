@@ -46,7 +46,7 @@ const Index: React.FC = () => {
 
   const {
     usePlainBackground,
-    notificationsEnabled,
+    playSoundAfterFirstSession,
     stopAfterFirstSession, // Get stopAfterFirstSession from settings
   } = useSelector((state: RootState) => state.settings);
 
@@ -66,7 +66,7 @@ const Index: React.FC = () => {
       previousLapCountRef.current = lapCount;
 
       // Play sound only after the first session ends and only if notifications are enabled
-      if (!soundPlayedRef.current && notificationsEnabled) {
+      if (!soundPlayedRef.current && playSoundAfterFirstSession) {
         playSoundForDuration(10); // Play sound for 10 seconds
         soundPlayedRef.current = true; // Ensure sound only plays once
       }
@@ -76,7 +76,7 @@ const Index: React.FC = () => {
         pause();
       }
     }
-  }, [lapCount, fixedTime, notificationsEnabled, stopAfterFirstSession]); // Added stopAfterFirstSession dependency
+  }, [lapCount, fixedTime, playSoundAfterFirstSession, stopAfterFirstSession]); // Added stopAfterFirstSession dependency
 
   const handleReset = () => {
     reset();

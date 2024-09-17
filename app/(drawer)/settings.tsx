@@ -13,8 +13,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { Colors } from "@/constants/Colors";
 import { plainBackground } from "@/constants/rankBackgrounds";
 import {
-  toggleNotification,
   togglePlainBackground,
+  togglePlaySoundAfterFirstSession,
   toggleStopAfterFirstSession, // Updated import
 } from "@/redux/slices/settingsSlice";
 import { RootState } from "@/redux/store";
@@ -27,15 +27,18 @@ const { width: WINDOW_WIDTH, height: WINDOW_HEIGHT } = Dimensions.get("window");
 const Settings = () => {
   const dispatch = useDispatch();
 
-  const { notificationsEnabled, stopAfterFirstSession, usePlainBackground } =
-    useSelector((state: RootState) => state.settings);
+  const {
+    playSoundAfterFirstSession,
+    stopAfterFirstSession,
+    usePlainBackground,
+  } = useSelector((state: RootState) => state.settings);
 
   const settingsData = [
     {
       id: "1",
-      title: "Enable Notification",
-      value: notificationsEnabled,
-      action: toggleNotification,
+      title: "Play Sound After First Session", // Updated title
+      value: playSoundAfterFirstSession, // Updated state
+      action: togglePlaySoundAfterFirstSession, // Updated action
     },
     {
       id: "2",
