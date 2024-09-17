@@ -15,9 +15,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-               BuildableName = "adhdtimer.app"
-               BlueprintName = "adhdtimer"
-               ReferencedContainer = "container:adhdtimer.xcodeproj">
+               BuildableName = "ObsidianFocus.app"
+               BlueprintName = "ObsidianFocus"
+               ReferencedContainer = "container:ObsidianFocus.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -33,9 +33,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "00E356ED1AD99517003FC87E"
-               BuildableName = "adhdtimerTests.xctest"
-               BlueprintName = "adhdtimerTests"
-               ReferencedContainer = "container:adhdtimer.xcodeproj">
+               BuildableName = "ObsidianFocusTests.xctest"
+               BlueprintName = "ObsidianFocusTests"
+               ReferencedContainer = "container:ObsidianFocus.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -55,9 +55,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-            BuildableName = "adhdtimer.app"
-            BlueprintName = "adhdtimer"
-            ReferencedContainer = "container:adhdtimer.xcodeproj">
+            BuildableName = "ObsidianFocus.app"
+            BlueprintName = "ObsidianFocus"
+            ReferencedContainer = "container:ObsidianFocus.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </LaunchAction>
@@ -72,9 +72,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-            BuildableName = "adhdtimer.app"
-            BlueprintName = "adhdtimer"
-            ReferencedContainer = "container:adhdtimer.xcodeproj">
+            BuildableName = "ObsidianFocus.app"
+            BlueprintName = "ObsidianFocus"
+            ReferencedContainer = "container:ObsidianFocus.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>
