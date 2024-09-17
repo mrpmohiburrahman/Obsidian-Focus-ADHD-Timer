@@ -33,11 +33,7 @@ const Onboarding = () => {
     }
   };
   return (
-    <SafeAreaView
-      style={{
-        flex: 1,
-      }}
-    >
+    <View style={{ flex: 1 }}>
       <Animated.ScrollView
         onScroll={scrollHandler}
         ref={aref}
@@ -58,10 +54,8 @@ const Onboarding = () => {
           index={index}
         />
       </View>
-    </SafeAreaView>
+    </View>
   );
 };
 
 export default Onboarding;
-
-const styles = StyleSheet.create({});

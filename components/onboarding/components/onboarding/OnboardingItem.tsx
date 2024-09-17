@@ -1,5 +1,6 @@
 import { Image, StyleSheet, Text, View } from "react-native";
 import { SCREEN_WIDTH } from "../../constants/screen";
+import { Colors } from "@/constants/Colors";
 type Props = {
   screen: any;
 };
@@ -7,9 +8,9 @@ type Props = {
 const OnboardingItem = ({ screen }: Props) => {
   return (
     <View style={styles.container}>
-      <Image source={screen.image} style={styles.image} />
-      <Text style={styles.title}>{screen.title}</Text>
-      <Text style={styles.description}>{screen.description}</Text>
+      {/* <Image source={screen.image} style={styles.image} /> */}
+      {/* <Text style={styles.title}>{screen.title}</Text> */}
+      {/* <Text style={styles.description}>{screen.description}</Text> */}
     </View>
   );
 };
@@ -18,13 +19,18 @@ export default OnboardingItem;
 
 const styles = StyleSheet.create({
   container: {
+    backgroundColor: Colors.background,
     width: SCREEN_WIDTH,
     justifyContent: "center",
     alignItems: "center",
+    // borderWidth: 1,
+    borderColor: "red",
   },
   image: {
     width: "80%",
     height: 350,
+    borderWidth: 1,
+    borderColor: "red",
   },
   title: {
     color: "#ab49c1",

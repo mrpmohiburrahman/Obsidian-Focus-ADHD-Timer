@@ -7,8 +7,9 @@ import Animated, {
   withTiming,
 } from "react-native-reanimated";
 import IconButton from "../shared/IconButton";
+import { moderateScale } from "react-native-size-matters";
 const AnimatedCircle = Animated.createAnimatedComponent(Circle);
-const radius = 50;
+const radius = 30;
 const circumference = radius * Math.PI * 2;
 type Props = {
   index: number;
@@ -31,10 +32,15 @@ const CircularButton = ({ screensLenght, onPress, index }: Props) => {
   return (
     <View
       style={{
+        // borderWidth: 1,
+        borderColor: "red",
         alignSelf: "center",
         justifyContent: "center",
         alignItems: "center",
-        position: "relative",
+        // position: "relative",
+        position: "absolute",
+        right: 0,
+        bottom: moderateScale(60),
       }}
     >
       <IconButton
@@ -52,7 +58,7 @@ const CircularButton = ({ screensLenght, onPress, index }: Props) => {
           cx={centerX}
           cy={centerY}
           r={radius}
-          stroke="lightblue"
+          stroke="grey"
           strokeWidth="2"
         />
         <AnimatedCircle
@@ -60,7 +66,7 @@ const CircularButton = ({ screensLenght, onPress, index }: Props) => {
           cx={centerX}
           cy={centerY}
           r={radius}
-          stroke="#4fafb0"
+          stroke="white"
           strokeWidth="4"
           strokeLinecap={"round"}
           strokeDasharray={`${radius * Math.PI * 2}`}
@@ -71,5 +77,3 @@ const CircularButton = ({ screensLenght, onPress, index }: Props) => {
 };
 
 export default CircularButton;
-
-const styles = StyleSheet.create({});

@@ -1,7 +1,7 @@
 import Onboarding from "@/components/onboarding/Onboarding";
+import { Colors } from "@/constants/Colors";
 import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Text, View } from "react-native";
-
 
 export default function App() {
   return (
@@ -14,7 +14,7 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: Colors.background,
     alignItems: "center",
     justifyContent: "center",
   },

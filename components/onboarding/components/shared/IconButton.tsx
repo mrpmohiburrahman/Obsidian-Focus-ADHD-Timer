@@ -34,7 +34,7 @@ const IconButton: FC<IconButtonProps> = ({
   iconFamily = "Feather",
   variant = "contained",
   size = "medium",
-  iconColor = "white",
+  iconColor = "black",
   roundness = "medium",
   style = {},
   onPress,
@@ -77,7 +77,7 @@ const styles = StyleSheet.create({
     opacity: 0.9,
   },
   containedButton: {
-    backgroundColor: "#2196F3",
+    backgroundColor: "white",
   },
   textButton: {
     backgroundColor: "transparent",

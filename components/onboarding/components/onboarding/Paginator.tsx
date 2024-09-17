@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import React, { FC, useCallback } from "react";
 import Animated, {
   Extrapolate,
@@ -6,36 +6,43 @@ import Animated, {
   useAnimatedStyle,
 } from "react-native-reanimated";
 import { SCREEN_WIDTH } from "../../constants/screen";
-const SIZE = 10;
+import { moderateScale } from "react-native-size-matters";
+
+const SIZE = 8;
 
 type Props = {
   scrollX: Animated.SharedValue<number>;
   itemsLength: number;
 };
+
 const Paginator: FC<Props> = ({ scrollX, itemsLength }) => {
   const inputRange = new Array(itemsLength)
     .fill("")
     .map((_, i) => i * SCREEN_WIDTH);
 
-  const getDotAnimatedStyle = useCallback((index: number) => {
-    const outputRange = new Array(itemsLength)
-      .fill("")
-      .map((_, i) => (i === index ? SIZE * 2 : SIZE));
-    return useAnimatedStyle(() => {
-      const dotWidth = interpolate(
-        scrollX.value,
-        inputRange,
-        outputRange,
-        Extrapolate.CLAMP
-      );
-      return {
-        width: dotWidth,
-        borderRadius: dotWidth / 2,
-      };
-    });
-  }, []);
+  const getDotAnimatedStyle = useCallback(
+    (index: number) => {
+      const outputRange = new Array(itemsLength)
+        .fill("")
+        .map((_, i) => (i === index ? SIZE * 2 : SIZE));
+      return useAnimatedStyle(() => {
+        const dotWidth = interpolate(
+          scrollX.value,
+          inputRange,
+          outputRange,
+          Extrapolate.CLAMP
+        );
+        return {
+          width: dotWidth,
+          borderRadius: dotWidth / 2,
+        };
+      });
+    },
+    [scrollX.value, inputRange, itemsLength]
+  );
+
   return (
-    <View style={styles.container}>
+    <View style={[styles.container]}>
       {new Array(itemsLength).fill("").map((_, index) => {
         return (
           <Animated.View
@@ -55,6 +62,13 @@ const styles = StyleSheet.create({
     alignItems: "center",
     flexDirection: "row",
     justifyContent: "center",
+    // borderWidth: 1,
+    borderColor: "red",
+    width: moderateScale(120),
+    alignSelf: "flex-end",
+    position: "absolute",
+    bottom: moderateScale(50),
+    // marginBottom: moderateScale(20),
   },
   item: {
     marginHorizontal: 4,
