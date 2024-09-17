@@ -1,4 +1,4 @@
-package com.mrpmohibur.adhdtimer
+package pixel.obsidianfocus
 
 import android.app.Application
 import android.content.res.Configuration

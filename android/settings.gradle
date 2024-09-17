@@ -44,7 +44,7 @@ if (getRNMinorVersion() >= 75) {
   }
 }
 
-rootProject.name = 'ObsidianFocus'
+rootProject.name = 'Obsidian Focus'
 
 dependencyResolutionManagement {
   versionCatalogs {
