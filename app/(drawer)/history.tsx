@@ -6,8 +6,9 @@ import {
   Text,
   TouchableOpacity,
   Dimensions,
+  Button,
 } from "react-native";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Card } from "react-native-paper";
 import { LineChart } from "react-native-chart-kit";
 import { Ionicons } from "@expo/vector-icons"; // For navigation icons
@@ -21,6 +22,8 @@ import { defaultBlurhash, rankBlurhashes } from "@/constants/rankBlurhashes";
 import BackgroundShadows from "@/components/BackgroundShadows";
 import { generalBackgrounds } from "@/constants/generalBackgrounds";
 import { getBackgrundAndHashs } from "@/utils/getBackgrundAndHashs";
+import { resetXpState } from "@/redux/slices/xpSlice";
+import { populateLastThreeWeeks } from "@/utils/populateSampleData";
 
 const { width: WINDOW_WIDTH, height: WINDOW_HEIGHT } = Dimensions.get("window");
 
@@ -113,7 +116,7 @@ const HistoryScreen: React.FC = () => {
       return {
         date,
         totalSessions,
-        totalDuration: totalDuration / 60, // Convert to minutes
+        totalDuration: parseFloat((totalDuration / 60).toFixed(2)), // Convert to minutes
       };
     });
   }, [datesInWeek, sessionsByDate]);
@@ -214,7 +217,7 @@ const HistoryScreen: React.FC = () => {
   const backgroundImage = usePlainBackground
     ? plainBackground
     : backgroundImageSource;
-
+  const dispatch = useDispatch();
   return (
     <View style={styles.container}>
       {/* Background Image */}
@@ -238,6 +241,18 @@ const HistoryScreen: React.FC = () => {
         contentContainerStyle={styles.contentContainer}
         showsVerticalScrollIndicator={false}
       />
+      {/* <Button
+        title="resetXpState"
+        onPress={() => {
+          dispatch(resetXpState());
+        }}
+      />
+      <Button
+        title="populateLastThreeWeeks"
+        onPress={() => {
+          populateLastThreeWeeks();
+        }}
+      /> */}
     </View>
   );
 };

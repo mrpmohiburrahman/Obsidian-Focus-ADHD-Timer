@@ -86,11 +86,14 @@ const xpSlice = createSlice({
   reducers: {
     addSession: (state, action: PayloadAction<{ sessionLength: number }>) => {
       const { sessionLength } = action.payload; // sessionLength in seconds
-      const sessionMinutes = sessionLength / 60;
+      // console.log("🚀 ~ sessionLength:", sessionLength, typeof sessionLength);
+      const sessionMinutes = parseFloat((sessionLength / 60).toFixed(2));
+      // console.log("🚀 ~ sessionMinutes:", sessionMinutes);
 
       // Update total focused time and session count
       state.totalFocusedTime += sessionLength;
       state.sessionCount += 1;
+      // console.log("🚀 ~ totalFocusedTime:", state.totalFocusedTime);
 
       // If session is less than or equal to 5 minutes, just return after updating the time
       if (sessionMinutes <= 5) {
