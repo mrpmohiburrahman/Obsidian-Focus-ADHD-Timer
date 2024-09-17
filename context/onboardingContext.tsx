@@ -22,17 +22,8 @@ export function OnboardProvider({ children }: React.PropsWithChildren) {
 
   useEffect(() => {
     if (!isOnboardingComplete) {
-      console.log(
-        "🚀 ~ React.useEffect ~ isOnboarded: if block",
-        isOnboardingComplete
-      );
-
       router.replace("/(onboarding)");
     } else {
-      console.log(
-        "🚀 ~ React.useEffect ~ isOnboarded: elseblock",
-        isOnboardingComplete
-      );
       router.replace("/(app)/(drawer)");
     }
   }, [isOnboardingComplete, router]);
