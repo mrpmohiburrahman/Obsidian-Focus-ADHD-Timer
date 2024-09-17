@@ -1,21 +1,12 @@
-import { Colors } from "@/constants/Colors";
-import { useOnboard } from "@/context/onboardingContext";
-import React from "react";
-import { View, Text, Button, StyleSheet } from "react-native";
-// import { useOnboard } from '@/context/OnboardContext';
+import Onboarding from "@/components/onboarding/Onboarding";
+import { StatusBar } from "expo-status-bar";
+import { StyleSheet, Text, View } from "react-native";
 
-export default function OnboardingPage1() {
-  const { completeOnboarding } = useOnboard();
 
-  const handleNext = () => {
-    // Complete onboarding and navigate
-    completeOnboarding();
-  };
-
+export default function App() {
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>Welcome to Onboarding Page 1</Text>
-      <Button title="Complete Onboarding" onPress={handleNext} />
+      <Onboarding />
     </View>
   );
 }
@@ -23,12 +14,8 @@ export default function OnboardingPage1() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "center",
+    backgroundColor: "#fff",
     alignItems: "center",
-    backgroundColor: Colors.background,
-  },
-  text: {
-    color: Colors.text,
-    fontSize: 24,
+    justifyContent: "center",
   },
 });
