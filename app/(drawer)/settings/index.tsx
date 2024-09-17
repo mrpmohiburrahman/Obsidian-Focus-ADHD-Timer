@@ -11,7 +11,6 @@ import {
 } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { Href, useRouter } from "expo-router"; // Import useRouter for navigation
-
 import { Colors } from "@/constants/Colors";
 import { plainBackground } from "@/constants/rankBackgrounds";
 import {
@@ -23,6 +22,7 @@ import { RootState } from "@/redux/store";
 import { getBackgrundAndHashs } from "@/utils/getBackgrundAndHashs";
 import { Image } from "expo-image";
 import { moderateScale } from "react-native-size-matters";
+import { Ionicons, MaterialIcons, Octicons } from "@expo/vector-icons"; // You can use any icon library here
 
 const { width: WINDOW_WIDTH, height: WINDOW_HEIGHT } = Dimensions.get("window");
 
@@ -31,6 +31,7 @@ type SettingsItem =
   | {
       id: string;
       title: string;
+      icon: React.ReactNode; // Add icon as a part of the settings item
       type: "switch";
       value: boolean;
       action: () => any; // Update: action should return an action object
@@ -38,6 +39,7 @@ type SettingsItem =
   | {
       id: string;
       title: string;
+      icon: React.ReactNode; // Add icon as a part of the settings item
       type: "navigation";
       route: Href;
     };
@@ -52,11 +54,12 @@ const Settings = () => {
     usePlainBackground,
   } = useSelector((state: RootState) => state.settings);
 
-  // Updated settingsData with two new navigation items
+  // Updated settingsData with two new navigation items and icons
   const settingsData: SettingsItem[] = [
     {
       id: "1",
       title: "Play Sound After First Session",
+      icon: <Octicons name="bell" color={"white"} size={20} />, // Add your icon
       type: "switch",
       value: playSoundAfterFirstSession,
       action: togglePlaySoundAfterFirstSession,
@@ -64,6 +67,7 @@ const Settings = () => {
     {
       id: "2",
       title: "Stop Timer After First Session",
+      icon: <Octicons name="stop" color={"white"} size={20} />, // Icon for stop action
       type: "switch",
       value: stopAfterFirstSession,
       action: toggleStopAfterFirstSession,
@@ -71,6 +75,9 @@ const Settings = () => {
     {
       id: "3",
       title: "Use Plain Background Color",
+      icon: (
+        <MaterialIcons name="invert-colors-off" color={"white"} size={20} />
+      ), // Icon for background
       type: "switch",
       value: usePlainBackground,
       action: togglePlainBackground,
@@ -78,23 +85,28 @@ const Settings = () => {
     {
       id: "4",
       title: "Terms and Conditions",
+      icon: <Ionicons name="document-lock-outline" color={"white"} size={20} />, // Icon for Terms
       type: "navigation",
       route: "/settings/terms-and-conditions",
     },
     {
       id: "5",
       title: "Privacy Policy",
+      icon: <Octicons name="shield-lock" color={"white"} size={20} />, // Icon for Privacy
       type: "navigation",
       route: "/settings/privacy-policy",
     },
   ];
 
-  // Updated renderItem to handle different types of settings
+  // Updated renderItem to handle different types of settings with icons
   const renderItem = ({ item }: { item: SettingsItem }) => {
     if (item.type === "switch") {
       return (
         <View style={styles.option}>
-          <Text style={styles.optionText}>{item.title}</Text>
+          <View style={styles.optionLeft}>
+            {item.icon}
+            <Text style={styles.optionText}>{item.title}</Text>
+          </View>
           <Switch
             value={item.value}
             onValueChange={() => {
@@ -110,7 +122,10 @@ const Settings = () => {
           style={styles.option}
           onPress={() => router.push(item.route)} // Fixed: route is a string
         >
-          <Text style={styles.optionText}>{item.title}</Text>
+          <View style={styles.optionLeft}>
+            {item.icon}
+            <Text style={styles.optionText}>{item.title}</Text>
+          </View>
         </TouchableOpacity>
       );
     }
@@ -166,6 +181,11 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     paddingVertical: 15,
+  },
+  optionLeft: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 10, // Space between the icon and text
   },
   optionText: {
     fontSize: 18,
