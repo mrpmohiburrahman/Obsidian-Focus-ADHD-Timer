@@ -14,7 +14,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { getBackgrundAndHashs } from "@/utils/getBackgrundAndHashs";
 import BackgroundShadows from "@/components/BackgroundShadows";
 import { playSoundForDuration, stopSound } from "@/hooks/SoundPlayer";
-// import { playSoundForDuration, stopSound } from "@/utils/SoundPlayer"; // Import the sound functions
 
 const { height: WINDOW_HEIGHT } = Dimensions.get("window");
 
@@ -45,9 +44,11 @@ const Index: React.FC = () => {
   const xp = useSelector((state: RootState) => state.xp.xp);
   const rank = useSelector((state: RootState) => state.xp.rank);
 
-  const { usePlainBackground, notificationsEnabled } = useSelector(
-    (state: RootState) => state.settings
-  );
+  const {
+    usePlainBackground,
+    notificationsEnabled,
+    stopAfterFirstSession, // Get stopAfterFirstSession from settings
+  } = useSelector((state: RootState) => state.settings);
 
   const { backgroundImageSource, backgroundBlurhash } = getBackgrundAndHashs();
 
@@ -69,8 +70,13 @@ const Index: React.FC = () => {
         playSoundForDuration(10); // Play sound for 10 seconds
         soundPlayedRef.current = true; // Ensure sound only plays once
       }
+
+      // If stopAfterFirstSession is enabled, stop the timer after the first session
+      if (stopAfterFirstSession) {
+        pause();
+      }
     }
-  }, [lapCount, fixedTime, notificationsEnabled]);
+  }, [lapCount, fixedTime, notificationsEnabled, stopAfterFirstSession]); // Added stopAfterFirstSession dependency
 
   const handleReset = () => {
     reset();

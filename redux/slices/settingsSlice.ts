@@ -2,8 +2,8 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   notificationsEnabled: false,
-  continueAsStopwatch: false,
-  usePlainBackground: false, // Added new state for plain background toggle
+  stopAfterFirstSession: false, // Renamed from continueAsStopwatch to stopAfterFirstSession
+  usePlainBackground: false,
 };
 
 const settingsSlice = createSlice({
@@ -13,8 +13,9 @@ const settingsSlice = createSlice({
     toggleNotification(state) {
       state.notificationsEnabled = !state.notificationsEnabled;
     },
-    toggleStopwatch(state) {
-      state.continueAsStopwatch = !state.continueAsStopwatch;
+    toggleStopAfterFirstSession(state) {
+      // Updated action
+      state.stopAfterFirstSession = !state.stopAfterFirstSession;
     },
     togglePlainBackground(state) {
       state.usePlainBackground = !state.usePlainBackground;
@@ -24,8 +25,8 @@ const settingsSlice = createSlice({
 
 export const {
   toggleNotification,
-  toggleStopwatch,
-  togglePlainBackground, // Export new action
+  toggleStopAfterFirstSession, // Export the updated action
+  togglePlainBackground,
 } = settingsSlice.actions;
 
 export default settingsSlice.reducer;

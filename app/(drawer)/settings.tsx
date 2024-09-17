@@ -15,7 +15,7 @@ import { plainBackground } from "@/constants/rankBackgrounds";
 import {
   toggleNotification,
   togglePlainBackground,
-  toggleStopwatch,
+  toggleStopAfterFirstSession, // Updated import
 } from "@/redux/slices/settingsSlice";
 import { RootState } from "@/redux/store";
 import { getBackgrundAndHashs } from "@/utils/getBackgrundAndHashs";
@@ -23,10 +23,11 @@ import { Image } from "expo-image";
 import { moderateScale } from "react-native-size-matters";
 
 const { width: WINDOW_WIDTH, height: WINDOW_HEIGHT } = Dimensions.get("window");
+
 const Settings = () => {
   const dispatch = useDispatch();
 
-  const { notificationsEnabled, continueAsStopwatch, usePlainBackground } =
+  const { notificationsEnabled, stopAfterFirstSession, usePlainBackground } =
     useSelector((state: RootState) => state.settings);
 
   const settingsData = [
@@ -38,9 +39,9 @@ const Settings = () => {
     },
     {
       id: "2",
-      title: "Continue as Stopwatch After Focus Ends",
-      value: continueAsStopwatch,
-      action: toggleStopwatch,
+      title: "Stop Timer After First Session",
+      value: stopAfterFirstSession, // Updated state
+      action: toggleStopAfterFirstSession, // Updated action
     },
     {
       id: "3",
@@ -68,12 +69,9 @@ const Settings = () => {
   const { backgroundImageSource } = getBackgrundAndHashs({ isGeneral: true });
 
   const backgroundImage = usePlainBackground
-    ? plainBackground 
-    : backgroundImageSource; 
+    ? plainBackground
+    : backgroundImageSource;
 
-  // useEffect(() => {
-  //   dispatch(setRankManually({ rank: "Peasant" }));
-  // }, []);
   return (
     <SafeAreaView style={styles.container}>
       <Image
