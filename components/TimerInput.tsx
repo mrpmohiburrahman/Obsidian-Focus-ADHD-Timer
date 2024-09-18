@@ -1,5 +1,3 @@
-// components/TimerInput.tsx
-
 import React, { useState, useEffect } from "react";
 import {
   View,
@@ -38,15 +36,36 @@ const TimerInput: React.FC<TimerInputProps> = ({ fixedTime, setFixedTime }) => {
   }, [fixedTime]);
 
   const handleConfirm = () => {
-    // Ensure that hours, minutes, and seconds are numbers
     const totalSeconds =
       parseInt(hours.toString()) * 3600 +
       parseInt(minutes.toString()) * 60 +
       parseInt(seconds.toString());
 
     if (totalSeconds > 0) {
-      setFixedTime(totalSeconds);
-      setModalVisible(false);
+      if (totalSeconds < 300) {
+        // 300 seconds = 5 minutes
+        Alert.alert(
+          "Short Timer Warning",
+          "Timers under 5 minutes might not be considered. Do you still want to continue?",
+          [
+            {
+              text: "Cancel",
+              onPress: () => console.log("Cancel Pressed"),
+              style: "cancel",
+            },
+            {
+              text: "Confirm",
+              onPress: () => {
+                setFixedTime(totalSeconds);
+                setModalVisible(false);
+              },
+            },
+          ]
+        );
+      } else {
+        setFixedTime(totalSeconds);
+        setModalVisible(false);
+      }
     } else {
       Alert.alert("Invalid Time", "Please set a time greater than zero.");
     }
