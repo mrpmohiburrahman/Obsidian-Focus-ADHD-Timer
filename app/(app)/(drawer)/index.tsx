@@ -1,5 +1,11 @@
 import React, { useEffect, useRef } from "react";
-import { SafeAreaView, StyleSheet, View, Dimensions } from "react-native";
+import {
+  SafeAreaView,
+  StyleSheet,
+  View,
+  Dimensions,
+  Button,
+} from "react-native";
 import { moderateScale } from "react-native-size-matters";
 import { Image } from "expo-image";
 import TimerControls from "@/components/TimerControls";
@@ -14,6 +20,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { getBackgrundAndHashs } from "@/utils/getBackgrundAndHashs";
 import BackgroundShadows from "@/components/BackgroundShadows";
 import { playSoundForDuration, stopSound } from "@/hooks/SoundPlayer";
+import { resetOnboardingState } from "@/redux/slices/onboardingSlice";
 
 const { height: WINDOW_HEIGHT } = Dimensions.get("window");
 
@@ -98,7 +105,12 @@ const Index: React.FC = () => {
       )}
 
       <Header rank={rank} xp={xp} />
-
+      {/* <Button
+        title="resetOnboardingState"
+        onPress={() => {
+          dispatch(resetOnboardingState());
+        }}
+      /> */}
       <View style={styles.content}>
         <TimerDisplay
           progress={progress}
