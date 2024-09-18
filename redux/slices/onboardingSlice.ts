@@ -1,4 +1,4 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice } from "@reduxjs/toolkit";
 
 interface OnboardingState {
   isOnboardingComplete: boolean;
@@ -9,14 +9,16 @@ const initialState: OnboardingState = {
 };
 
 const onboardingSlice = createSlice({
-  name: 'onboarding',
+  name: "onboarding",
   initialState,
   reducers: {
     setOnboardingComplete: (state) => {
       state.isOnboardingComplete = true;
     },
+    resetOnboardingState: () => initialState,
   },
 });
 
-export const { setOnboardingComplete } = onboardingSlice.actions;
+export const { setOnboardingComplete, resetOnboardingState } =
+  onboardingSlice.actions;
 export default onboardingSlice.reducer;

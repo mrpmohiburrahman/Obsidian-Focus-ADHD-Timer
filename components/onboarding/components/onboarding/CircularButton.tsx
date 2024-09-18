@@ -14,11 +14,11 @@ const circumference = radius * Math.PI * 2;
 type Props = {
   index: number;
   onPress: () => void;
-  screensLenght: number;
+  screensLength: number;
 };
 const centerX = 70;
 const centerY = 70;
-const CircularButton = ({ screensLenght, onPress, index }: Props) => {
+const CircularButton = ({ screensLength, onPress, index }: Props) => {
   const strokeOffset = useSharedValue(circumference);
   const animatedCircleProps = useAnimatedProps(() => {
     return {
@@ -26,7 +26,7 @@ const CircularButton = ({ screensLenght, onPress, index }: Props) => {
     };
   });
   useEffect(() => {
-    let percentage = circumference / screensLenght;
+    let percentage = circumference / screensLength;
     strokeOffset.value = circumference - percentage * (index + 1);
   }, [index]);
   return (

@@ -21,12 +21,11 @@ export function OnboardProvider({ children }: React.PropsWithChildren) {
   const router = useRouter();
 
   useEffect(() => {
-    router.replace("/(onboarding)");
-    // if (!isOnboardingComplete) {
-    //   router.replace("/(onboarding)");
-    // } else {
-    //   router.replace("/(app)/(drawer)");
-    // }
+    if (!isOnboardingComplete) {
+      router.replace("/(onboarding)");
+    } else {
+      router.replace("/(app)/(drawer)");
+    }
   }, [isOnboardingComplete, router]);
 
   const completeOnboarding = () => {
