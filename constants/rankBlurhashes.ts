@@ -17,4 +17,4 @@ export const rankBlurhashes: { [key: string]: string } = {
 
 export const defaultBlurhash = "L03+J[j[fQj[offQfQfQfQfQfQfQ";
 
-
+export const onboardingBlurhash = "L89Q04-tEdWEM_IRSeja1CIm-XoM";

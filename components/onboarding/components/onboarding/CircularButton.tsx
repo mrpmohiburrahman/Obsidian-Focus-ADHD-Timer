@@ -32,15 +32,9 @@ const CircularButton = ({ screensLenght, onPress, index }: Props) => {
   return (
     <View
       style={{
-        // borderWidth: 1,
-        borderColor: "red",
         alignSelf: "center",
         justifyContent: "center",
         alignItems: "center",
-        // position: "relative",
-        position: "absolute",
-        right: 0,
-        bottom: moderateScale(60),
       }}
     >
       <IconButton

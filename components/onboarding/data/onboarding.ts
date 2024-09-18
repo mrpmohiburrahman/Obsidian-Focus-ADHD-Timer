@@ -4,27 +4,24 @@ const description =
 export const screens = [
   {
     id: 1,
-    title: "Pay Easy & Receive Easy",
-    description,
+    title: "Obsidian Focus ADHD",
+    description:
+      "A Pomodoro timer built for ADHD minds. Stay on track, beat distractions, and accomplish more with each session.",
     image: require(`@/assets/onboarding/onboarding1.png`),
   },
   {
     id: 2,
-    title: "Decrease the percentage of losses.",
+    title: "No Notifications",
 
-    description,
+    description:
+      "Notifications can break your flow. With ObsidianFocus, no alerts disturb your focus when a session ends. Just work freely.",
     image: require(`@/assets/onboarding/onboarding2.png`),
   },
   {
     id: 3,
-    title: "Report any error to Us",
-    description,
+    title: "Rise Through the Ranks",
+    description:
+      "Earn XP for each session and unlock medieval ranks. Start as a Peasant and climb to Emperor through focused work.",
     image: require(`@/assets/onboarding/onboarding3.png`),
-  },
-  {
-    id: 4,
-    title: "Send Money Abroad",
-    description,
-    image: require(`@/assets/onboarding/onboarding4.png`),
   },
 ];
