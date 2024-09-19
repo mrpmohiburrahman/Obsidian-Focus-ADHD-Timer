@@ -1,4 +1,6 @@
-Certainly! Let's modify the experience points (XP) system to align with your app's functionality, where users can set custom focus session lengths, and the timer continues to run like a stopwatch after each session. This new system will reward users based on both the duration and frequency of their focus sessions, providing motivation tailored to their individual needs.
+
+<details>
+<summary> Calculation Of XPs</summary>
 
 ---
 
@@ -115,21 +117,6 @@ Given the adjusted XP system, we might need to revise the XP thresholds for rank
 
 ---
 
-## **Incorporating the App's Features**
-
-### **Lap Counting and Color Changes**
-
-- Use the `lapCount` from your code to track consecutive sessions.
-- The changing colors of the circular progress bar can be linked to the session streak bonuses.
-- Each new color signifies progression and can be associated with the increasing XP bonuses for consecutive sessions.
-
-### **Timer Functionality**
-
-- Since the timer continues like a stopwatch after each session without notifications, users can focus for extended periods without interruptions.
-- Encourage users to complete multiple sessions in one sitting by offering streak bonuses.
-- Allow users to see their total focused time, laps completed, and XP earned in real-time.
-
----
 
 ## **Additional Gamification Features**
 
@@ -142,35 +129,7 @@ Given the adjusted XP system, we might need to revise the XP thresholds for rank
 
 ### **Customization Unlocks**
 
-- At certain ranks or XP levels, unlock new colors or themes for the progress bar.
-- Allow users to customize the appearance of their timer or app background.
 
 ---
 
-## **Considerations for ADHD Users**
-
-### **Flexible and Personalized**
-
-- The XP system rewards users regardless of their chosen session length, making it flexible for individual needs.
-- Encourages small wins with short sessions while also rewarding longer focus periods.
-
-### **Avoid Overwhelm**
-
-- Keep the XP notifications subtle to avoid distracting users from their focus.
-- Summarize XP gains at the end of each session or day rather than after every action.
-
----
-
-## **Implementation Tips**
-
-- **Real-Time XP Tracking**: Update the user's XP in real-time as they progress through sessions and laps.
-- **User Dashboard**: Provide a dashboard where users can see their current rank, total XP, focused time, and achievements.
-- **Feedback Mechanisms**: Use visual indicators (like progress bars) to show how close the user is to the next rank.
-
----
-
-By adjusting the XP system to your app's functionality, you create a more personalized and motivating experience for your users. The system rewards both the time spent focusing and the commitment to continue through consecutive sessions, aligning well with the needs of individuals with ADHD.
-
----
-
-**Final Note**: Remember to keep the user experience central. Test the XP thresholds and bonuses to ensure they provide a satisfying progression without causing frustration or overwhelm.
+</details>
