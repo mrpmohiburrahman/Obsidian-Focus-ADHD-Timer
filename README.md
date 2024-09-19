@@ -1,4 +1,20 @@
 
+## Obsidian Focus
+A distraction-free Pomodoro app designed for ADHD users, featuring a unique medieval ranking system. Here's a quick demo.
+
+
+https://github.com/user-attachments/assets/f99f9f23-b93d-4c57-979a-780466e52d56
+
+
+
+
+
+
+
+
+
+
+
 <details>
 <summary> Calculation Of XPs</summary>
 
